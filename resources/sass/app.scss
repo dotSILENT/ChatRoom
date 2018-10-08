@@ -1,0 +1,56 @@
+
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+// Single chat room styles
+@import 'room';
+
+
+.navbar-chatroom 
+{
+  background-color: #6ea7d2;
+}
+
+/* change the brand and text color */
+.navbar-chatroom .navbar-brand,
+.navbar-chatroom .navbar-text 
+{
+  color: rgba(255,255,255,.9);
+}
+
+/* change the link color */
+.navbar-chatroom .navbar-nav .nav-link 
+{
+  color: rgba(255,255,255,.8);
+}
+
+/* change the color of active or hovered links */
+.navbar-chatroom .nav-item.active .nav-link,
+.navbar-chatroom .nav-item:hover .nav-link 
+{
+  color: #ffffff;
+  background-color: rgba(0,0,0,.05);
+  border-radius: 5px;
+}
+
+/* for dropdown only - change the color of droodown */
+.navbar-chatroom .dropdown-menu 
+{
+  background-color: #ffffff;
+}
+.navbar-chatroom .dropdown-item 
+{
+  color: #000;
+}
+.navbar-chatroom .dropdown-item:hover,
+.navbar-chatroom .dropdown-item:focus 
+{
+  color: #333333;
+  background-color: rgba(211, 211, 211, 0.562);
+}
