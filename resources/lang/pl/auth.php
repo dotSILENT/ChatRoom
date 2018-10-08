@@ -15,5 +15,18 @@ return [
 
     'failed' => 'Wprowadzone dane nie pasują do żadnego z kont.',
     'throttle' => 'Przekroczono ilość prób. Spróbuj ponownie za :seconds sekund.',
+    'password' => 'Hasło',
+    'confirmpw' => 'Potwierdź hasło',
+    'login' => 'Zaloguj',
+    'register' => 'Zarejestruj się',
+    'logout' => 'Wyloguj',
+    'remember' => 'Zapamiętaj mnie',
+    'forgot' => 'Zapomniałeś hasła?',
+    'credentials' => 'E-mail lub nazwa użytkownika',
+    'username' => 'Nazwa użytkownika',
+    'email' => 'Adres e-mail',
+    'resetpw' => 'Zresetuj swoje hasło',
+    'reset' => 'Resetuj',
+    'sendreset' => 'Wyślij e-mail z linkiem resetującym hasło'
 
 ];

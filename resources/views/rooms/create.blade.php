@@ -5,7 +5,7 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
-                        Stwórz nowy pokój czatowy
+                        {{ __('rooms.create') }}
                     </div>
 
                     <div class="card-body">
@@ -18,19 +18,19 @@
                             <form method="POST" action="{{ route('rooms.store') }}">
                                 @csrf
                                 <div class="form-group row">
-                                    <label for="roomName">Nazwa nowego pokoju</label>
-                                    <input type="input" class="form-control" name="roomName" id="roomName" placeholder="Nazwa pokoju" aria-describedby="roomNameDesc" required>
-                                    <small id="roomNameDesc" class="form-text text-muted">Powinna opisywać tematykę Twojego kanału</small>
+                                    <label for="roomName">{{ __('rooms.name') }}</label>
+                                    <input type="input" class="form-control" name="roomName" id="roomName" placeholder="{{ __('rooms.name') }}" aria-describedby="roomNameDesc" required>
+                                    <small id="roomNameDesc" class="form-text text-muted">{{ __('rooms.namedesc') }}</small>
                                 </div>
                                 <div class="form-group row">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" name="private" id="private">
-                                        <label class="custom-control-label" for="private">Pokój prywatny. Dołączyć mogą tylko zaproszone osoby</label>
+                                        <label class="custom-control-label" for="private">{{ __('rooms.private') }}</label>
                                     </div>
                                 </div>
                                 <div class="form-group row justify-content-center">
                                     <div class="col-sm-4">
-                                        <input type="submit" class="btn btn-block btn-success" value="Dodaj pokój">
+                                        <input type="submit" class="btn btn-block btn-success" value="{{ __('rooms.create') }}">
                                     </div>
                                 </div>
                             </form>

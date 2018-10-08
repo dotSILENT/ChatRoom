@@ -29,42 +29,42 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="login-dropdown">
                         <div class="container-fluid" style="padding: 0px 30px 0px 30px; min-width: 250px">
-                        <form method="POST" action="{{ route('login') }}">
-                            @csrf
+                            <form method="POST" action="{{ route('login') }}">
+                                @csrf
 
-                            <div class="form-group row">
-                                <input id="login" type="text" class="form-control" name="login" placeholder="E-mail lub nazwa użytkownika" required autofocus>
-                            </div>
+                                <div class="form-group row">
+                                    <input id="login" type="text" class="form-control" name="login" placeholder="{{ __('auth.credentials') }}" required autofocus>
+                                </div>
 
-                            <div class="form-group row">
-                                <input id="password" type="password" class="form-control" name="password" placeholder="Hasło" required>
-                            </div>
+                                <div class="form-group row">
+                                    <input id="password" type="password" class="form-control" name="password" placeholder="{{ __('auth.password') }}" required>
+                                </div>
 
-                            <div class="form-group row">
-                                    <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="remember" id="remember">
+                                <div class="form-group row">
+                                        <div class="custom-control custom-checkbox">
+                                            <input class="custom-control-input" type="checkbox" name="remember" id="remember">
 
-                                        <label class="custom-control-label" for="remember">
-                                            {{ __('Remember Me') }}
-                                        </label>
-                                    </div>
-                            </div>
+                                            <label class="custom-control-label" for="remember">
+                                                {{ __('auth.remember') }}
+                                            </label>
+                                        </div>
+                                </div>
 
-                            <div class="form-group row mb-0">
-                                    <button type="submit" class="btn btn-block btn-primary">
-                                        {{ __('Login') }}
-                                    </button>
+                                <div class="form-group row mb-0">
+                                        <button type="submit" class="btn btn-block btn-primary">
+                                            {{ __('auth.login') }}
+                                        </button>
 
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                            </div>
-                        </form>
+                                        <a class="btn btn-link" href="{{ route('password.request') }}">
+                                            {{ __('auth.forgot') }}
+                                        </a>
+                                </div>
+                            </form>
                         </div>
                     </div> 
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="register">Zarejestruj się</a>
+                    <a class="nav-link" href="register">{{ __('auth.register') }}</a>
                 </li>
             @endif
             </ul>
