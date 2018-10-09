@@ -63,7 +63,7 @@ class LoginController extends Controller
         return redirect()->to('login')
             ->withInput($request->except('password'))
             ->withErrors([
-                $this->username() => trans('auth.failed'),
+                $this->username() => __('auth.failed'),
             ]);
     }
 }

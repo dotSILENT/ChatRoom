@@ -16,7 +16,7 @@ class RoomsController extends Controller
 
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the chat rooms
      *
      * @return \Illuminate\Http\Response
      */
@@ -28,7 +28,7 @@ class RoomsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new chat room
      *
      * @return \Illuminate\Http\Response
      */
@@ -38,7 +38,7 @@ class RoomsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created chat room in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -59,19 +59,19 @@ class RoomsController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified chat room.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-         $room = Room::findOrFail($id);
+        $room = Room::findOrFail($id);
         return view('rooms.show', compact('room'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified chat room.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -82,7 +82,7 @@ class RoomsController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified chat room in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -94,7 +94,7 @@ class RoomsController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified chat room from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

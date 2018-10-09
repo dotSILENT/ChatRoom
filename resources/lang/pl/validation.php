@@ -135,5 +135,6 @@ return [
     |
     */
     'attributes' => [
+        'roomName' => 'Nazwa pokoju'
     ],
 ];

@@ -10,16 +10,11 @@
 
                     <div class="card-body">
                         <div class="col">
-                            @if(count($errors))
-                                @foreach($errors as $error)
-                                    <p>$error</p>
-                                @endforeach
-                            @endif
                             <form method="POST" action="{{ route('rooms.store') }}">
                                 @csrf
                                 <div class="form-group row">
                                     <label for="roomName">{{ __('rooms.name') }}</label>
-                                    <input type="input" class="form-control" name="roomName" id="roomName" placeholder="{{ __('rooms.name') }}" aria-describedby="roomNameDesc" required>
+                                    <input type="input" class="form-control {{ $errors->has('roomName') ? 'is-invalid' : '' }}" name="roomName" id="roomName" placeholder="{{ __('rooms.name') }}" aria-describedby="roomNameDesc" value="{{ old('roomName') }}" required>
                                     <small id="roomNameDesc" class="form-text text-muted">{{ __('rooms.namedesc') }}</small>
                                 </div>
                                 <div class="form-group row">
