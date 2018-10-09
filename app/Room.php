@@ -23,4 +23,9 @@ class Room extends Model
     {
         return $this->belongsTo('App\User', 'user_id');
     }
+
+    public function messages()
+    {
+        return $this->hasMany('App\Message');
+    }
 }
