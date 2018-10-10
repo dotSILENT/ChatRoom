@@ -17,5 +17,3 @@ Route::resource('rooms', 'RoomsController');
 
 Auth::routes();
 Route::get('/logout', '\App\Http\Controllers\Auth\LoginController@logout')->name('logout'); // laravel forces you to use POST to succesfully logout, we don't neccessarily need that
-
-//Route::get('/home', 'HomeController@index')->name('home');

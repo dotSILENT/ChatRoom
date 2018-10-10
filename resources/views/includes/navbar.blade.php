@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-chatroom navbar-dark">
+<nav class="navbar navbar-expand-lg navbar-chatroom shadow-sm navbar-dark">
     <div class="container">
         <a class="navbar-brand" href="{{ route('home') }}">{{ config('app.name', 'ChatRoom') }}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarLinks" aria-controls="navbarLinks" aria-expanded="false" aria-label="Toggle navigation">
