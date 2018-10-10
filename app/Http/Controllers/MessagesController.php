@@ -32,4 +32,29 @@ class MessagesController extends Controller
             ->reverse();
         return $messages->toJson();
     }
+
+    /**
+     * Store a new message
+     *
+     * @param Illuminate\Http\Request $request Request data sent by user
+     * @param integer $room Room ID
+     * @return void
+     */
+    public function store(Request $request, $room)
+    {
+        $vdata = $request->validate([
+            'message' => 'required|max:200'
+        ]);
+        
+        // TODO: Handle file uploads
+        $room = Room::findOrFail($room);
+        
+        $msg = new Message;
+        $msg->room_id = $room->id;
+        $msg->user_id = Auth::id();
+        $msg->content = $vdata->message;
+        $msg->type = 'message';
+        $msg->save();
+        return response('success', 200);
+    }
 }
