@@ -51,8 +51,8 @@ class MessagesController extends Controller
         
         $msg = new Message;
         $msg->room_id = $room->id;
-        $msg->user_id = Auth::id();
-        $msg->content = $vdata->message;
+        $msg->user_id = 1;
+        $msg->content = $vdata['message'];
         $msg->type = 'message';
         $msg->save();
         return response('success', 200);
