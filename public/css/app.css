@@ -10476,7 +10476,7 @@ a.text-dark:focus {
 #chatroom-users {
   border-left: 1px solid black;
   background: #f8fafc;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .navbar-chatroom {
