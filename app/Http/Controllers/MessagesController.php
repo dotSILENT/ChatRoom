@@ -1,5 +1,9 @@
 <?php
 
+/**
+ *  Messages JSON API Controller 
+ */
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -7,13 +11,14 @@ use App\Message;
 use App\Room;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\MessageResource;
 
 class MessagesController extends Controller
 {
 
     public function __construct()
     {
-        //$this->middleware('auth:api');
+        $this->middleware('auth:api');
     }
     /**
      * Return last 50 messages in specified room
@@ -21,16 +26,31 @@ class MessagesController extends Controller
      * @param integer $room Room ID
      * @return void
      */
-    public function index($room)
+    public function index(Request $request, $room)
     {
         $room = Room::findOrFail($room); // TODO: Change this to use short-uuid instead of room ids
-        $messages = $room->messages()
-            ->orderBy('created_at', 'desc')
+        
+        $messages = $room->messages();
+
+        if($request->has('after'))
+        {
+            $messages = $messages->where('id', '>', $request->after);
+        }
+        else if($request->has('before'))
+        {
+            $messages = $messages->where('id', '<', $request->before);
+        }
+        else
+        {
+            $messages = $room->messages();
+        }
+
+        $messages = $messages->orderBy('created_at', 'desc')
             ->limit('50')
             ->with('user')
-            ->get()
-            ->reverse();
-        return $messages->toJson();
+            ->get();
+
+        return MessageResource::collection($messages);
     }
 
     /**
@@ -51,10 +71,10 @@ class MessagesController extends Controller
         
         $msg = new Message;
         $msg->room_id = $room->id;
-        $msg->user_id = 1;
+        $msg->user_id = Auth::guard('api')->id();
         $msg->content = $vdata['message'];
         $msg->type = 'message';
         $msg->save();
-        return response('success', 200);
+        return response()->json(['status' => 'success'], 200);
     }
 }

@@ -11,14 +11,14 @@ class Message extends Model
      *
      * @var array
      */
-    protected $filalble = ['room_id', 'user_id', 'content'];
+    protected $fillable = ['room_id', 'user_id', 'content'];
 
     /**
      * Attributes hidden for arrays
      *
      * @var array
      */
-    protected $hidden = ['id', 'room_id', 'user_id'];
+    protected $hidden = ['room_id', 'user_id'];
 
     /**
      * The room that this message belongs to
