@@ -6,12 +6,6 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarLinks">
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="{{ route('home') }}">{{ __('home.index') }}</a>
-                </li>
-            </ul>
-            
             <ul class="navbar-nav ml-auto">
             @if(Auth::check())
                 <li class="nav-item dropdown">

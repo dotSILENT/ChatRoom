@@ -1,5 +1,9 @@
 @extends('layouts.master')
 
+@section('head')
+    <script src="{{ asset('js/room_chat.js') }}"></script>
+@endsection
+
 @section('content')
     <div  class="row">
         <div class="col-12">
