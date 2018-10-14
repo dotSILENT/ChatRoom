@@ -1,24 +1,49 @@
-let lastMessageID = 0;
+var lastMessageID = 0;
+var firstMessageID = 0;
+var messagesCount = 0;
+
 const roomID = document.head.querySelector('meta[name="roomID"]').content;
 const apiToken = 'Bearer ' + document.head.querySelector('meta[name="apiToken"]').content;
-
-window.onload = function() {
-    if (!window.jQuery)
-    {
-        console.error('jQuery needs to be loaded in order for room chat to work');
-    }
-    else
-    {
-        setTimeout(refreshMessages, 700);
-        console.log(apiToken);
-        console.log(roomID);
-    }
+const axiosHeaders = {
+    Authorization: apiToken,
+    Accepts: 'application/json'
 }
 
-
-function refreshMessages(filter = null)
+$(document).ready(function ()
 {
-    var status = grabMessages(lastMessageID ? 'after='+lastMessageID : null);
+    refreshMessagesTimer();
+
+    // Message sending event handler
+    $('#room-message-submit').click(function()
+    {
+        if($('#room-message-input').val().length <= 0)
+            return;
+        
+        axios.post('/api/room/'+ roomID +'/messages',
+        {
+            message: $('#room-message-input').val()
+        },
+        {
+            headers: axiosHeaders
+        })
+        .then(function(response)
+        {
+            $('#room-message-input').val('');
+        })
+        .catch(function(error){});
+    });
+});
+
+function refreshMessagesTimer()
+{
+    var filter = null;
+    var el = $('#room-messages-box');
+    if(el.scrollTop() == 0 && firstMessageID != 0)
+        filter = 'before='+firstMessageID;
+    else if(lastMessageID != 0)
+        filter = 'after='+lastMessageID;
+
+    var status = grabMessages(filter);
 
     var timeout = 800;
 
@@ -30,7 +55,7 @@ function refreshMessages(filter = null)
     if(!document.hasFocus) // no need to spam with requests if we don't even see the page
         timeout = 3000;
 
-    setTimeout(refreshMessages, timeout);
+    setTimeout(refreshMessagesTimer, timeout);
 }
 
 // Make a GET request to the API and grab messages
@@ -38,17 +63,14 @@ function grabMessages(filter = null)
 {
     axios.get('/api/room/' + roomID + '/messages' + ((filter == null) ? '' : '?'+filter),
     { 
-        headers: 
-        { 
-            Authorization: apiToken,
-            Accepts: 'application/json'
-        }
+        headers: axiosHeaders
     }) 
     .then(function (response)
     {
-        if(response.data.data.length >= 0)
+        if(response.data.data.length > 0)
         {
-            parseMessages(response.data.data);
+            console.log(response.data.data);
+            parseMessagesData(response.data);
             return 'success';
         }
     })
@@ -60,14 +82,30 @@ function grabMessages(filter = null)
     return 'empty';
 }
 
-
-function parseMessages(data)
+// Parse the messages & append them to the chat
+function parseMessagesData(json)
 {
-    $.each(data, function(index, msg)
+    $.each(json.data, function(index, msg)
     {
-        if(parseInt(msg.id) > lastMessageID)
-            lastMessageID = parseInt(msg.id);
+        let appendAfter; // div id, default
+
+        let msgid = parseInt(msg.id);
         
-        $('#room-messages-box').prepend('<div id="room-msg-'+ msg.id +'" class="alert alert-secondary">'+ msg.message +' ' + msg.created_at +'</div>');
+        if(msgid > lastMessageID && lastMessageID > 0) // if it's a new message, append it after the newest we already have
+        {
+            appendAfter = '#room-msg-' + lastMessageID;
+            lastMessageID = msgid;
+        }
+        else appendAfter = '#room-messages-top'; // else append it at the top
+
+        messagesCount++;
+        
+        $(appendAfter).after('<div id="room-msg-'+ msgid +'" class="alert alert-secondary mb-2">'+ msg.message +' ' + msg.created_at +'</div>');
     });
+
+    if(json.meta.first_id < firstMessageID || firstMessageID == 0)
+        firstMessageID = json.meta.first_id;
+
+    if(json.meta.last_id > lastMessageID || lastMessageID == 0)
+        lastMessageID = json.meta.last_id;
 }

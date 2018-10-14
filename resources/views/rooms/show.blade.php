@@ -18,6 +18,7 @@
                     <div class="row h-100">
                         <div class="col">
                             <div id="room-messages-box" style="overflow-y: auto; max-height: 600px;">
+                                <div id="room-messages-top" class="d-none"></div>
                             </div>
                             <div>
                                 <div class="input-group mt-2 mb-2">

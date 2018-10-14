@@ -46,11 +46,15 @@ class MessagesController extends Controller
         }
 
         $messages = $messages->orderBy('created_at', 'desc')
-            ->limit('50')
+            ->limit('30')
             ->with('user')
             ->get();
 
-        return MessageResource::collection($messages);
+        return MessageResource::collection($messages)->additional(['meta' => [
+                'first_id' => $messages->min('id'),
+                'last_id' => $messages->max('id')
+            ]
+        ]);
     }
 
     /**
@@ -63,7 +67,7 @@ class MessagesController extends Controller
     public function store(Request $request, $room)
     {
         $vdata = $request->validate([
-            'message' => 'required|max:200'
+            'message' => 'required|string|min:1|max:200'
         ]);
         
         // TODO: Handle file uploads
