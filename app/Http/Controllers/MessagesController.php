@@ -45,7 +45,7 @@ class MessagesController extends Controller
             $messages = $room->messages();
         }
 
-        $messages = $messages->orderBy('created_at', 'desc')
+        $messages = $messages->orderBy('id', 'desc')
             ->limit('30')
             ->with('user')
             ->get();
@@ -67,7 +67,7 @@ class MessagesController extends Controller
     public function store(Request $request, $room)
     {
         $vdata = $request->validate([
-            'message' => 'required|string|min:1|max:200'
+            'message' => 'required|string|max:200'
         ]);
         
         // TODO: Handle file uploads

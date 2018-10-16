@@ -1,19 +1,33 @@
-var lastMessageID = 0;
-var firstMessageID = 0;
-var messagesCount = 0;
-
 const roomID = document.head.querySelector('meta[name="roomID"]').content;
 const apiToken = 'Bearer ' + document.head.querySelector('meta[name="apiToken"]').content;
 const axiosHeaders = {
     Authorization: apiToken,
     Accepts: 'application/json'
-}
+};
+
+var jqMessagesBox = '#room-messages-box'; // gets changed to actual element specified here under document ready
+
+// data
+var app = {
+    lastMessageID: 0,
+    firstMessageID: 0,
+    messagesCount: 0,
+    messages: []
+};
 
 $(document).ready(function ()
 {
+    // initialize some jQuery variables to optimize the code
+    jqMessagesBox = $(jqMessagesBox);
     refreshMessagesTimer();
 
     // Message sending event handler
+    $('#room-message-input').on('keyup', function (key)
+    {
+        if(key.keyCode == 13)
+            $('#room-message-submit').click();
+    });
+
     $('#room-message-submit').click(function()
     {
         if($('#room-message-input').val().length <= 0)
@@ -37,11 +51,10 @@ $(document).ready(function ()
 function refreshMessagesTimer()
 {
     var filter = null;
-    var el = $('#room-messages-box');
-    if(el.scrollTop() == 0 && firstMessageID != 0)
-        filter = 'before='+firstMessageID;
-    else if(lastMessageID != 0)
-        filter = 'after='+lastMessageID;
+    if(jqMessagesBox.scrollTop() == 0 && app.firstMessageID != 0)
+        filter = 'before=' + app.firstMessageID;
+    else if(app.lastMessageID != 0)
+        filter = 'after='+ app.lastMessageID;
 
     var status = grabMessages(filter);
 
@@ -69,8 +82,28 @@ function grabMessages(filter = null)
     {
         if(response.data.data.length > 0)
         {
-            console.log(response.data.data);
-            parseMessagesData(response.data);
+            let append = false;
+            response.data.data.reverse(); // we get the messages in "newest at the bottom" order, let's reverse it to simplify things
+            if(response.data.meta.last_id > app.lastMessageID || !app.lastMessageID)
+            {
+                app.lastMessageID = response.data.meta.last_id;
+                // these are the new ones, so they land on the bottom
+                append = true;
+            }
+            
+            if(response.data.meta.first_id < app.firstMessageID || !app.firstMessageID)
+            {
+                app.firstMessageID = response.data.meta.first_id;
+                // these messages are older, therefore they need to be pushed at the top
+                append = false;
+            }
+
+            if(append)
+                app.messages = app.messages.concat(response.data.data);
+            else app.messages = response.data.data.concat(app.messages);
+
+            app.messagesCount += response.data.data.length;
+            renderMessages(!append);
             return 'success';
         }
     })
@@ -82,30 +115,51 @@ function grabMessages(filter = null)
     return 'empty';
 }
 
-// Parse the messages & append them to the chat
-function parseMessagesData(json)
+function renderMessages(upwards = false)
 {
-    $.each(json.data, function(index, msg)
+    // when upwards = true it means that we load previous messages, therefore if user has scrolled up, we need to calculate an offset to keep him in the same place
+    let bottomScrollOffset = jqMessagesBox.prop('scrollHeight') - jqMessagesBox.scrollTop(); // we keep the same bottom offset after rendering messages
+    let autoScroll = (bottomScrollOffset - jqMessagesBox.height() < 50);
+
+    $('.room-message-block').remove();
+
+    let prevMsg = null;
+    let counter = 0;
+    $.each(app.messages, function(index, msg)
     {
-        let appendAfter; // div id, default
-
-        let msgid = parseInt(msg.id);
-        
-        if(msgid > lastMessageID && lastMessageID > 0) // if it's a new message, append it after the newest we already have
+        if(prevMsg != null && prevMsg.user.username === msg.user.username && counter <= 5)
         {
-            appendAfter = '#room-msg-' + lastMessageID;
-            lastMessageID = msgid;
+            // just append this message to the message block
+            $(`[data-message-id=${prevMsg.id}]`).after(`<div data-message-id="${msg.id}">
+                ${msg.message}
+            </div>`);
+            counter++;
         }
-        else appendAfter = '#room-messages-top'; // else append it at the top
-
-        messagesCount++;
-        
-        $(appendAfter).after('<div id="room-msg-'+ msgid +'" class="alert alert-secondary mb-2">'+ msg.message +' ' + msg.created_at +'</div>');
+        else // create new message block
+        {
+            counter = 0;
+            jqMessagesBox.append(`<div class="room-message-block mb-2 mr-1">
+                <div class="row">
+                    <div class="col-1">
+                        <div style="height: 40px; width: 40px; border-radius: 100%; background-color: black"></div>
+                    </div>
+                    <div class="col pl-0">
+                        <h5 class="alert-heading text-primary float-left">${msg.user.username}</h5>
+                        <small class="text-muted float-right">${msg.created_at}</small>
+                        <div class="clearfix"></div>
+                        <div data-message-id="${msg.id}">
+                            ${msg.message}
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>`);
+        }
+        prevMsg = msg;
     });
 
-    if(json.meta.first_id < firstMessageID || firstMessageID == 0)
-        firstMessageID = json.meta.first_id;
+    let newScroll = jqMessagesBox.prop('scrollHeight') - bottomScrollOffset;
 
-    if(json.meta.last_id > lastMessageID || lastMessageID == 0)
-        lastMessageID = json.meta.last_id;
+    if(autoScroll || upwards)
+        jqMessagesBox.scrollTop(autoScroll ? jqMessagesBox.prop('scrollHeight') : newScroll);
 }

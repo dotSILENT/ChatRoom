@@ -76,10 +76,6 @@ module.exports = __webpack_require__(38);
 /***/ 38:
 /***/ (function(module, exports) {
 
-var lastMessageID = 0;
-var firstMessageID = 0;
-var messagesCount = 0;
-
 var roomID = document.head.querySelector('meta[name="roomID"]').content;
 var apiToken = 'Bearer ' + document.head.querySelector('meta[name="apiToken"]').content;
 var axiosHeaders = {
@@ -87,10 +83,26 @@ var axiosHeaders = {
     Accepts: 'application/json'
 };
 
+var jqMessagesBox = '#room-messages-box'; // gets changed to actual element specified here under document ready
+
+// data
+var app = {
+    lastMessageID: 0,
+    firstMessageID: 0,
+    messagesCount: 0,
+    messages: []
+};
+
 $(document).ready(function () {
+    // initialize some jQuery variables to optimize the code
+    jqMessagesBox = $(jqMessagesBox);
     refreshMessagesTimer();
 
     // Message sending event handler
+    $('#room-message-input').on('keyup', function (key) {
+        if (key.keyCode == 13) $('#room-message-submit').click();
+    });
+
     $('#room-message-submit').click(function () {
         if ($('#room-message-input').val().length <= 0) return;
 
@@ -106,8 +118,7 @@ $(document).ready(function () {
 
 function refreshMessagesTimer() {
     var filter = null;
-    var el = $('#room-messages-box');
-    if (el.scrollTop() == 0 && firstMessageID != 0) filter = 'before=' + firstMessageID;else if (lastMessageID != 0) filter = 'after=' + lastMessageID;
+    if (jqMessagesBox.scrollTop() == 0 && app.firstMessageID != 0) filter = 'before=' + app.firstMessageID;else if (app.lastMessageID != 0) filter = 'after=' + app.lastMessageID;
 
     var status = grabMessages(filter);
 
@@ -129,8 +140,24 @@ function grabMessages() {
         headers: axiosHeaders
     }).then(function (response) {
         if (response.data.data.length > 0) {
-            console.log(response.data.data);
-            parseMessagesData(response.data);
+            var append = false;
+            response.data.data.reverse(); // we get the messages in "newest at the bottom" order, let's reverse it to simplify things
+            if (response.data.meta.last_id > app.lastMessageID || !app.lastMessageID) {
+                app.lastMessageID = response.data.meta.last_id;
+                // these are the new ones, so they land on the bottom
+                append = true;
+            }
+
+            if (response.data.meta.first_id < app.firstMessageID || !app.firstMessageID) {
+                app.firstMessageID = response.data.meta.first_id;
+                // these messages are older, therefore they need to be pushed at the top
+                append = false;
+            }
+
+            if (append) app.messages = app.messages.concat(response.data.data);else app.messages = response.data.data.concat(app.messages);
+
+            app.messagesCount += response.data.data.length;
+            renderMessages(!append);
             return 'success';
         }
     }).catch(function (error) {
@@ -140,27 +167,33 @@ function grabMessages() {
     return 'empty';
 }
 
-// Parse the messages & append them to the chat
-function parseMessagesData(json) {
-    $.each(json.data, function (index, msg) {
-        var appendAfter = void 0; // div id, default
+function renderMessages() {
+    var upwards = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
-        var msgid = parseInt(msg.id);
+    // when upwards = true it means that we load previous messages, therefore if user has scrolled up, we need to calculate an offset to keep him in the same place
+    var bottomScrollOffset = jqMessagesBox.prop('scrollHeight') - jqMessagesBox.scrollTop(); // we keep the same bottom offset after rendering messages
+    var autoScroll = bottomScrollOffset - jqMessagesBox.height() < 50;
 
-        if (msgid > lastMessageID && lastMessageID > 0) // if it's a new message, append it after the newest we already have
+    $('.room-message-block').remove();
+
+    var prevMsg = null;
+    var counter = 0;
+    $.each(app.messages, function (index, msg) {
+        if (prevMsg != null && prevMsg.user.username === msg.user.username && counter <= 5) {
+            // just append this message to the message block
+            $('[data-message-id=' + prevMsg.id + ']').after('<div data-message-id="' + msg.id + '">\n                ' + msg.message + '\n            </div>');
+            counter++;
+        } else // create new message block
             {
-                appendAfter = '#room-msg-' + lastMessageID;
-                lastMessageID = msgid;
-            } else appendAfter = '#room-messages-top'; // else append it at the top
-
-        messagesCount++;
-
-        $(appendAfter).after('<div id="room-msg-' + msgid + '" class="alert alert-secondary mb-2">' + msg.message + ' ' + msg.created_at + '</div>');
+                counter = 0;
+                jqMessagesBox.append('<div class="room-message-block mb-2 mr-1">\n                <div class="row">\n                    <div class="col-1">\n                        <div style="height: 40px; width: 40px; border-radius: 100%; background-color: black"></div>\n                    </div>\n                    <div class="col pl-0">\n                        <h5 class="alert-heading text-primary float-left">' + msg.user.username + '</h5>\n                        <small class="text-muted float-right">' + msg.created_at + '</small>\n                        <div class="clearfix"></div>\n                        <div data-message-id="' + msg.id + '">\n                            ' + msg.message + '\n                        </div>\n                    </div>\n                </div>\n                <hr>\n            </div>');
+            }
+        prevMsg = msg;
     });
 
-    if (json.meta.first_id < firstMessageID || firstMessageID == 0) firstMessageID = json.meta.first_id;
+    var newScroll = jqMessagesBox.prop('scrollHeight') - bottomScrollOffset;
 
-    if (json.meta.last_id > lastMessageID || lastMessageID == 0) lastMessageID = json.meta.last_id;
+    if (autoScroll || upwards) jqMessagesBox.scrollTop(autoScroll ? jqMessagesBox.prop('scrollHeight') : newScroll);
 }
 
 /***/ })

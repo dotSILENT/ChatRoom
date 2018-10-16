@@ -16,16 +16,14 @@
 
                 <div class="card-body pt-0 pb-0">
                     <div class="row h-100">
-                        <div class="col">
-                            <div id="room-messages-box" style="overflow-y: auto; max-height: 600px;">
+                        <div class="col pl-0 pr-0">
+                            <div id="room-messages-box" style="overflow-y: auto; overflow-x: hidden; max-height: 600px;">
                                 <div id="room-messages-top" class="d-none"></div>
                             </div>
-                            <div>
-                                <div class="input-group mt-2 mb-2">
-                                    <input id="room-message-input" type="text" class="form-control" placeholder="{{ __('rooms.input') }}" autofocus>
-                                    <div class="input-group-append">
-                                        <input id="room-message-submit" type="button" class="btn btn-success" value="{{ __('rooms.submit') }}">
-                                    </div>
+                            <div class="input-group mt-2 mb-2 pr-2">
+                                <input id="room-message-input" type="text" class="form-control" placeholder="{{ __('rooms.input') }}" autofocus>
+                                <div class="input-group-append">
+                                    <input id="room-message-submit" type="button" class="btn btn-success" value="{{ __('rooms.submit') }}">
                                 </div>
                             </div>
                         </div>
