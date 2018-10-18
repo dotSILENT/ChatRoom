@@ -22,7 +22,9 @@ class RoomsController extends Controller
      */
     public function index()
     {
-        $rooms = Room::allFiltered(Auth::check() ? Auth::user()->id : null)->orderBy('private', 'desc')->get();
+        $rooms = Room::allFiltered(Auth::check() ? Auth::user()->id : null)
+            ->orderBy('private', 'desc')
+            ->get();
             
         return view('index', compact('rooms'));
     }

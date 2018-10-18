@@ -28,7 +28,11 @@
                             </div>
                         </div>
                         <div id="chatroom-users" class="col-2 h-100 d-none d-lg-block">
-                            Uzytkownicy
+                            @foreach($room->users as $user)
+                                @if($user->id  !== Auth::user()->id)
+                                    <p>{{ $user->username }}</p>
+                                @endif
+                            @endforeach
                         </div>
                     </div>
                 </div>

@@ -85,7 +85,7 @@ var axiosHeaders = {
 
 var jqMessagesBox = '#room-messages-box'; // gets changed to actual element specified here under document ready
 
-// data
+/**  app data **/
 var app = {
     lastMessageID: 0,
     firstMessageID: 0,
@@ -115,6 +115,9 @@ $(document).ready(function () {
         }).catch(function (error) {});
     });
 });
+
+/** Called when message submit event is fired */
+function onMessageSubmit() {}
 
 function refreshMessagesTimer() {
     var filter = null;
@@ -177,16 +180,13 @@ function renderMessages() {
     $('.room-message-block').remove();
 
     var prevMsg = null;
-    var counter = 0;
     $.each(app.messages, function (index, msg) {
-        if (prevMsg != null && prevMsg.user.username === msg.user.username && counter <= 5) {
+        if (prevMsg != null && prevMsg.user.username === msg.user.username) {
             // just append this message to the message block
             $('[data-message-id=' + prevMsg.id + ']').after('<div data-message-id="' + msg.id + '">\n                ' + msg.message + '\n            </div>');
-            counter++;
         } else // create new message block
             {
-                counter = 0;
-                jqMessagesBox.append('<div class="room-message-block mb-2 mr-1">\n                <div class="row">\n                    <div class="col-1">\n                        <div style="height: 40px; width: 40px; border-radius: 100%; background-color: black"></div>\n                    </div>\n                    <div class="col pl-0">\n                        <h5 class="alert-heading text-primary float-left">' + msg.user.username + '</h5>\n                        <small class="text-muted float-right">' + msg.created_at + '</small>\n                        <div class="clearfix"></div>\n                        <div data-message-id="' + msg.id + '">\n                            ' + msg.message + '\n                        </div>\n                    </div>\n                </div>\n                <hr>\n            </div>');
+                jqMessagesBox.append('<div class="room-message-block mb-2 mr-1">\n                <div class="row">\n                    <div class="col-1">\n                        <div style="height: 40px; width: 40px; border-radius: 100%; background-color: black"></div>\n                    </div>\n                    <div class="col pl-0">\n                        <h5 class="alert-heading text-primary float-left">' + msg.user.username + '</h5>\n                        <small class="text-muted float-right">' + msg.created_at + '</small>\n                        <div class="clearfix"></div>\n                        <div class="room-message" data-message-id="' + msg.id + '">\n                            ' + msg.message + '\n                        </div>\n                    </div>\n                </div>\n                <hr>\n            </div>');
             }
         prevMsg = msg;
     });

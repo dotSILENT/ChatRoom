@@ -31,10 +31,17 @@ class User extends Authenticatable
 
     /**
      * Get chat rooms created by this user
-     * 
      */
-    public function ownedChatrooms()
+    public function ownedRooms()
     {
         return $this->hasMany(Room::class);
+    }
+
+    /**
+     * Get rooms this user is inside of
+     */
+    public function rooms()
+    {
+        return $this->belongsToMany(Room::class, 'room_users'); // many-to-many
     }
 }

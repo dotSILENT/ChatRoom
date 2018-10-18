@@ -7,7 +7,7 @@ const axiosHeaders = {
 
 var jqMessagesBox = '#room-messages-box'; // gets changed to actual element specified here under document ready
 
-// data
+/**  app data **/
 var app = {
     lastMessageID: 0,
     firstMessageID: 0,
@@ -47,6 +47,12 @@ $(document).ready(function ()
         .catch(function(error){});
     });
 });
+
+/** Called when message submit event is fired */
+function onMessageSubmit()
+{
+
+}
 
 function refreshMessagesTimer()
 {
@@ -124,20 +130,17 @@ function renderMessages(upwards = false)
     $('.room-message-block').remove();
 
     let prevMsg = null;
-    let counter = 0;
     $.each(app.messages, function(index, msg)
     {
-        if(prevMsg != null && prevMsg.user.username === msg.user.username && counter <= 5)
+        if(prevMsg != null && prevMsg.user.username === msg.user.username)
         {
             // just append this message to the message block
             $(`[data-message-id=${prevMsg.id}]`).after(`<div data-message-id="${msg.id}">
                 ${msg.message}
             </div>`);
-            counter++;
         }
         else // create new message block
         {
-            counter = 0;
             jqMessagesBox.append(`<div class="room-message-block mb-2 mr-1">
                 <div class="row">
                     <div class="col-1">
@@ -147,7 +150,7 @@ function renderMessages(upwards = false)
                         <h5 class="alert-heading text-primary float-left">${msg.user.username}</h5>
                         <small class="text-muted float-right">${msg.created_at}</small>
                         <div class="clearfix"></div>
-                        <div data-message-id="${msg.id}">
+                        <div class="room-message" data-message-id="${msg.id}">
                             ${msg.message}
                         </div>
                     </div>
