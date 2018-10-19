@@ -6,7 +6,7 @@
     <body>
         @include('includes.navbar')
 
-        <div class="container" style="padding-top: 20px">
+        <div class="container pt-2" id="bodyContainer">
             @yield('content')
         </div>
     </body>

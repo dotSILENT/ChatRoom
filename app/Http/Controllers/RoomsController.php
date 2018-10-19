@@ -69,6 +69,21 @@ class RoomsController extends Controller
     public function show($id)
     {
         $room = Room::findOrFail($id);
+
+        if(!$room->users()->where('id', Auth::user()->id)->exists())
+        {
+            // User isn't subscribed to this room
+            if($room->private && Auth::user()->id !== $room->owner->id)
+            {
+                // holla holla m8 this is a private one, you can only get added through an invite
+                return redirect()->route('home')->with('status', 'unauthorized');
+            }
+            else
+            {
+                // Add him to the room
+                $room->users()->attach(Auth::user()->id);
+            }
+        }
         return view('rooms.show', compact('room'));
     }
 
