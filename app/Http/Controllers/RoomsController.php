@@ -76,7 +76,7 @@ class RoomsController extends Controller
             if($room->private && Auth::user()->id !== $room->owner->id)
             {
                 // holla holla m8 this is a private one, you can only get added through an invite
-                return redirect()->route('home')->with('status', 'unauthorized');
+                return redirect()->route('home')->setStatusCode(401);
             }
             else
             {
