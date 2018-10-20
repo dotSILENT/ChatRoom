@@ -13,9 +13,9 @@ class Room extends Model
     /**
      * Get filtered rooms for guest/user
      *
-     * @param QueryBuilder $query
+     * @param Builder $query
      * @param integer $user_id user id to include private rooms or null for guests (default)
-     * @return QueryBuilder
+     * @return Builder
      */
     public static function scopeAllFiltered($query, $user_id = null)
     {
