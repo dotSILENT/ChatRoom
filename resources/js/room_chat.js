@@ -6,12 +6,15 @@ const axiosHeaders = {
 };
 
 var jqMessagesBox = '#room-messages-box'; // gets changed to actual element specified here under document ready
+var jqMessageInput = '#room-message-input';
+var jqMessageSubmit = '#room-message-submit';
 
 /**  app data **/
 var app = {
     lastMessageID: 0,
     firstMessageID: 0,
     messagesCount: 0,
+    renderedMessages: 0,
     messages: []
 };
 
@@ -19,39 +22,39 @@ $(document).ready(function ()
 {
     // initialize some jQuery variables to optimize the code
     jqMessagesBox = $(jqMessagesBox);
+    jqMessageInput = $(jqMessageInput);
+    jqMessageSubmit = $(jqMessageSubmit);
+
     refreshMessagesTimer();
 
     // Message sending event handler
-    $('#room-message-input').on('keyup', function (key)
+    jqMessageInput.on('keyup', function (key)
     {
         if(key.keyCode == 13)
-            $('#room-message-submit').click();
+            jqMessageSubmit.click();
     });
 
-    $('#room-message-submit').click(function()
-    {
-        if($('#room-message-input').val().length <= 0)
-            return;
-        
-        axios.post('/api/room/'+ roomID +'/messages',
-        {
-            message: $('#room-message-input').val()
-        },
-        {
-            headers: axiosHeaders
-        })
-        .then(function(response)
-        {
-            $('#room-message-input').val('');
-        })
-        .catch(function(error){});
-    });
+    jqMessageSubmit.click(function() { onMessageSubmit() });
 });
 
 /** Called when message submit event is fired */
 function onMessageSubmit()
 {
+    if(jqMessageInput.val().length <= 0)
+        return;
 
+    axios.post('/api/room/'+ roomID +'/messages',
+    {
+        message: jqMessageInput.val()
+    },
+    {
+        headers: axiosHeaders
+    })
+    .then(function(response)
+    {
+        jqMessageInput.val('');
+    })
+    .catch(function(error){});
 }
 
 function refreshMessagesTimer()
@@ -123,6 +126,9 @@ function grabMessages(filter = null)
 
 function renderMessages(upwards = false)
 {
+    if(app.renderedMessages == app.messagesCount)
+        return;
+
     // when upwards = true it means that we load previous messages, therefore if user has scrolled up, we need to calculate an offset to keep him in the same place
     let bottomScrollOffset = jqMessagesBox.prop('scrollHeight') - jqMessagesBox.scrollTop(); // we keep the same bottom offset after rendering messages
     let autoScroll = (bottomScrollOffset - jqMessagesBox.height() < 50);
@@ -132,6 +138,7 @@ function renderMessages(upwards = false)
     let prevMsg = null;
     $.each(app.messages, function(index, msg)
     {
+        app.renderedMessages++;
         if(prevMsg != null && prevMsg.user.username === msg.user.username)
         {
             // just append this message to the message block
