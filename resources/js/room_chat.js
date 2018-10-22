@@ -83,7 +83,7 @@ function refreshMessagesTimer()
 // Make a GET request to the API and grab messages
 function grabMessages(filter = null)
 {
-    axios.get('/api/room/' + roomID + '/messages' + ((filter == null) ? '' : '?'+filter),
+    axios.get(`/api/room/${roomID}/messages` + ((filter == null) ? '' : '?'+filter),
     { 
         headers: axiosHeaders
     }) 
@@ -142,7 +142,7 @@ function renderMessages(upwards = false)
         if(prevMsg != null && prevMsg.user.username === msg.user.username)
         {
             // just append this message to the message block
-            $(`[data-message-id=${prevMsg.id}]`).after(`<div data-message-id="${msg.id}">
+            $(`[data-message-id=${prevMsg.id}]`).after(`<div class="room-message" data-message-id="${msg.id}">
                 ${msg.message}
             </div>`);
         }

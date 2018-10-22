@@ -10479,6 +10479,11 @@ a.text-dark:focus {
   overflow-y: auto;
 }
 
+.room-message:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 5px;
+}
+
 .navbar-chatroom {
   background-color: #6ea7d2;
 }

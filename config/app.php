@@ -75,10 +75,23 @@ return [
     | The application locale determines the default locale that will be used
     | by the translation service provider. You are free to set this value
     | to any of the locales which will be supported by the application.
+    | 
+    | DEPRECATED: locale is automatically detected from supported_locales
     |
     */
 
     'locale' => 'pl',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Array of locales supported by this application 
+    |--------------------------------------------------------------------------
+    |
+    | Application will automatically detect preffred language and set it
+    | if it is supported by the app. Otherwise, fallback_locale is used
+    |
+    */
+    'supported_locales' => ['en', 'pl'],
 
     /*
     |--------------------------------------------------------------------------

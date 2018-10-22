@@ -5,3 +5,9 @@
     background: $body-bg;
     overflow-y: auto;
 }
+
+.room-message:hover
+{
+    background-color: rgba(0,0,0,0.05);
+    border-radius: 5px;
+}
