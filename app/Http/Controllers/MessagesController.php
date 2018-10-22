@@ -79,6 +79,9 @@ class MessagesController extends Controller
         $msg->content = $vdata['message'];
         $msg->type = 'message';
         $msg->save();
+
+        // Broadcast event
+        event(new \App\Events\NewRoomMessage($msg));
         return response()->json(['status' => 'success'], 200);
     }
 }

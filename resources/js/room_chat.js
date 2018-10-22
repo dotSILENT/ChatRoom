@@ -5,6 +5,7 @@ const axiosHeaders = {
     Accepts: 'application/json'
 };
 
+/** jquery */
 var jqMessagesBox = '#room-messages-box'; // gets changed to actual element specified here under document ready
 var jqMessageInput = '#room-message-input';
 var jqMessageSubmit = '#room-message-submit';
@@ -25,7 +26,7 @@ $(document).ready(function ()
     jqMessageInput = $(jqMessageInput);
     jqMessageSubmit = $(jqMessageSubmit);
 
-    refreshMessagesTimer();
+    grabMessages();
 
     // Message sending event handler
     jqMessageInput.on('keyup', function (key)
@@ -43,44 +44,29 @@ function onMessageSubmit()
     if(jqMessageInput.val().length <= 0)
         return;
 
+    let msg = jqMessageInput.val();
+    jqMessageInput.val('');
+    jqMessageInput.focus();
+
     axios.post('/api/room/'+ roomID +'/messages',
     {
-        message: jqMessageInput.val()
+        message: msg
     },
     {
         headers: axiosHeaders
     })
-    .then(function(response)
-    {
-        jqMessageInput.val('');
-    })
     .catch(function(error){});
 }
 
-function refreshMessagesTimer()
-{
-    var filter = null;
-    if(jqMessagesBox.scrollTop() == 0 && app.firstMessageID != 0)
-        filter = 'before=' + app.firstMessageID;
-    else if(app.lastMessageID != 0)
-        filter = 'after='+ app.lastMessageID;
+// Get broadcasted message events
+window.Echo.channel(`room.${roomID}`)
+    .listen('NewRoomMessage', (msg) => {
+        app.messages.push(msg);
+        app.messagesCount++;
+        renderMessages();
+});
 
-    var status = grabMessages(filter);
-
-    var timeout = 800;
-
-    if(status == 'empty')
-        timeout = 1300;
-    else if(status == 'error')
-        timeout = 5000;
-
-    if(!document.hasFocus) // no need to spam with requests if we don't even see the page
-        timeout = 3000;
-
-    setTimeout(refreshMessagesTimer, timeout);
-}
-
-// Make a GET request to the API and grab messages
+// Make a GET request to the API and grab a bunch of messages
 function grabMessages(filter = null)
 {
     axios.get(`/api/room/${roomID}/messages` + ((filter == null) ? '' : '?'+filter),
