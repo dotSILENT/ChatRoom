@@ -10474,8 +10474,6 @@ a.text-dark:focus {
 /* List of users on the room */
 
 #chatroom-users {
-  border-left: 1px solid black;
-  background: #f8fafc;
   overflow-y: auto;
 }
 

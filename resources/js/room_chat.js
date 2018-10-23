@@ -132,24 +132,23 @@ function renderMessages(upwards = false)
                 ${msg.message}
             </div>`);
         }
-        else // create new message block
+        else // create a new message block
         {
-            jqMessagesBox.append(`<div class="room-message-block mb-2 mr-1">
-                <div class="row">
-                    <div class="col-1">
-                        <div style="height: 40px; width: 40px; border-radius: 100%; background-color: black"></div>
+            jqMessagesBox.append(`
+                <div class="row room-message-block">
+                    <div class="col-1 px-0">
+                        <div style="height: 40px; width: 40px; border-radius: 50%; background-color: black"></div>
                     </div>
-                    <div class="col pl-0">
-                        <h5 class="alert-heading text-primary float-left">${msg.user.username}</h5>
+                    <div class="col-11 pl-lg-0">
+                        <h5 class="text-primary float-left">${msg.user.username}</h5>
                         <small class="text-muted float-right">${msg.created_at}</small>
                         <div class="clearfix"></div>
                         <div class="room-message" data-message-id="${msg.id}">
                             ${msg.message}
                         </div>
                     </div>
-                </div>
-                <hr>
-            </div>`);
+                    <hr class="w-100">
+                </div>`);
         }
         prevMsg = msg;
     });

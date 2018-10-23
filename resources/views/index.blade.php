@@ -21,7 +21,7 @@
                         <h6 class="card-subtitle text-muted">{{ __('rooms.createdby') . ' ' . $room->owner->username }}</h6>
                     </div>
                     <div class="col col-xs-2">
-                        <a href="{{ route('rooms.show', $room->id) }}" class="btn btn-success btn-block">{{ __('rooms.join') }}</a>
+                        <a href="{{ route('rooms.show', $room->id) }}" class="btn btn-outline-success btn-block">{{ __('rooms.join') }}</a>
                     </div>
                 </div>
             </div>

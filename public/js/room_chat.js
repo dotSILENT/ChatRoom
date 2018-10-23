@@ -189,9 +189,9 @@ function renderMessages() {
         if (prevMsg != null && prevMsg.user.username === msg.user.username) {
             // just append this message to the message block
             $('[data-message-id=' + prevMsg.id + ']').after('<div class="room-message" data-message-id="' + msg.id + '">\n                ' + msg.message + '\n            </div>');
-        } else // create new message block
+        } else // create a new message block
             {
-                jqMessagesBox.append('<div class="room-message-block mb-2 mr-1">\n                <div class="row">\n                    <div class="col-1">\n                        <div style="height: 40px; width: 40px; border-radius: 100%; background-color: black"></div>\n                    </div>\n                    <div class="col pl-0">\n                        <h5 class="alert-heading text-primary float-left">' + msg.user.username + '</h5>\n                        <small class="text-muted float-right">' + msg.created_at + '</small>\n                        <div class="clearfix"></div>\n                        <div class="room-message" data-message-id="' + msg.id + '">\n                            ' + msg.message + '\n                        </div>\n                    </div>\n                </div>\n                <hr>\n            </div>');
+                jqMessagesBox.append('\n                <div class="row room-message-block">\n                    <div class="col-1 px-0">\n                        <div style="height: 40px; width: 40px; border-radius: 50%; background-color: black"></div>\n                    </div>\n                    <div class="col-11 pl-lg-0">\n                        <h5 class="text-primary float-left">' + msg.user.username + '</h5>\n                        <small class="text-muted float-right">' + msg.created_at + '</small>\n                        <div class="clearfix"></div>\n                        <div class="room-message" data-message-id="' + msg.id + '">\n                            ' + msg.message + '\n                        </div>\n                    </div>\n                    <hr class="w-100">\n                </div>');
             }
         prevMsg = msg;
     });
