@@ -76,11 +76,39 @@ module.exports = __webpack_require__(84);
 /***/ 84:
 /***/ (function(module, exports) {
 
-var roomID = document.head.querySelector('meta[name="roomID"]').content;
-var apiToken = 'Bearer ' + document.head.querySelector('meta[name="apiToken"]').content;
-var axiosHeaders = {
-    Authorization: apiToken,
-    Accepts: 'application/json'
+/**  app data obj **/
+var app = {
+    roomID: null,
+    api: '/api',
+    axiosHeaders: {
+        Authorization: null,
+        Accepts: 'application/json'
+    },
+    lastMessageID: 0,
+    firstMessageID: 0,
+    messagesCount: 0,
+    renderedMessages: 0,
+    messages: [],
+    /**
+     * 
+     * @param string api Api path, i.e: '/api'
+     * @param string authorization API authorization header, i.e: 'Bearer eyJ..'
+     * @param string roomID ID of the subscribed room
+     */
+    init: function init(api, authHeader, roomID) {
+        this.roomID = roomID;
+        this.api = api;
+        this.axiosHeaders.Authorization = authHeader;
+
+        /**
+         * Get broadcasted events like new message etc
+         */
+        window.Echo.channel('room.' + app.roomID).listen('NewRoomMessage', function (msg) {
+            app.messages.push(msg);
+            app.messagesCount++;
+            renderMessages();
+        });
+    }
 };
 
 /** jquery */
@@ -88,24 +116,20 @@ var jqMessagesBox = '#room-messages-box'; // gets changed to actual element spec
 var jqMessageInput = '#room-message-input';
 var jqMessageSubmit = '#room-message-submit';
 
-/**  app data **/
-var app = {
-    lastMessageID: 0,
-    firstMessageID: 0,
-    messagesCount: 0,
-    renderedMessages: 0,
-    messages: []
-};
-
 $(document).ready(function () {
-    // initialize some jQuery variables to optimize the code
+    /** initialize our app */
+    var auth = 'Bearer ' + document.head.querySelector('meta[name="apiToken"]').content;
+    var roomID = document.head.querySelector('meta[name="roomID"]').content;
+    app.init('/api', auth, roomID);
+
+    /** initialize some jQuery variables to optimize the code */
     jqMessagesBox = $(jqMessagesBox);
     jqMessageInput = $(jqMessageInput);
     jqMessageSubmit = $(jqMessageSubmit);
 
-    grabMessages();
+    fetchMessages();
 
-    // Message sending event handler
+    /**  Message sending event handlers */
     jqMessageInput.on('keyup', function (key) {
         if (key.keyCode == 13) jqMessageSubmit.click();
     });
@@ -113,9 +137,16 @@ $(document).ready(function () {
     jqMessageSubmit.click(function () {
         onMessageSubmit();
     });
+
+    /** Messages box scroll event */
+    jqMessagesBox.scroll(function () {
+        onMessagesBoxScroll();
+    });
 });
 
-/** Called when message submit event is fired */
+/**
+ * Gets called when a message is sent by the user
+ */
 function onMessageSubmit() {
     if (jqMessageInput.val().length <= 0) return;
 
@@ -123,30 +154,37 @@ function onMessageSubmit() {
     jqMessageInput.val('');
     jqMessageInput.focus();
 
-    axios.post('/api/room/' + roomID + '/messages', {
+    axios.post(app.api + '/room/' + app.roomID + '/messages', {
         message: msg
     }, {
-        headers: axiosHeaders
+        headers: app.axiosHeaders
     }).catch(function (error) {});
 }
 
-// Get broadcasted message events
-window.Echo.channel('room.' + roomID).listen('NewRoomMessage', function (msg) {
-    app.messages.push(msg);
-    app.messagesCount++;
-    renderMessages();
-});
+/**
+ * Gets called when the messages box is scrolled
+ * Used for fetching older messages
+ */
+function onMessagesBoxScroll() {
+    if (jqMessagesBox.scrollTop() == 0 && jqMessagesBox.prop('scrollHeight') > jqMessagesBox.height()) fetchMessages('before=' + app.firstMessageID);
+}
 
-// Make a GET request to the API and grab a bunch of messages
-function grabMessages() {
+/**
+ * Fetch an array of messages from the server via AJAX GET
+ * Used when loading the page for the first time & for fetching old messages
+ * 
+ * @param string filter Filter to be used for fetching, null by default. Uses: "after=msgid", "before=msgid"
+ * @return string 'succes' if messages were fetched, 'error' on error and 'empty' if no messages were fetched
+ */
+function fetchMessages() {
     var filter = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-    axios.get('/api/room/' + roomID + '/messages' + (filter == null ? '' : '?' + filter), {
-        headers: axiosHeaders
+    axios.get(app.api + '/room/' + app.roomID + '/messages' + (filter == null ? '' : '?' + filter), {
+        headers: app.axiosHeaders
     }).then(function (response) {
         if (response.data.data.length > 0) {
             var append = false;
-            response.data.data.reverse(); // we get the messages in "newest at the bottom" order, let's reverse it to simplify things
+            response.data.data.reverse(); // we get the messages in "newest at the top" order, let's reverse it to simplify things
             if (response.data.meta.last_id > app.lastMessageID || !app.lastMessageID) {
                 app.lastMessageID = response.data.meta.last_id;
                 // these are the new ones, so they land on the bottom
@@ -172,6 +210,11 @@ function grabMessages() {
     return 'empty';
 }
 
+/**
+ * Render messages onto the messages box
+ * 
+ * @param bool upwards True when messages were prepended, to preserve scroll position
+ */
 function renderMessages() {
     var upwards = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
@@ -184,6 +227,7 @@ function renderMessages() {
     $('.room-message-block').remove();
 
     var prevMsg = null;
+    app.renderedMessages = 0;
     $.each(app.messages, function (index, msg) {
         app.renderedMessages++;
         if (prevMsg != null && prevMsg.user.username === msg.user.username) {

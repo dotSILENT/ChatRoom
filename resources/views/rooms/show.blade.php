@@ -21,7 +21,7 @@
                                 <div id="room-messages-top" class="d-none"></div>
                             </div>
                             <div class="input-group">
-                                <input id="room-message-input" type="text" class="form-control" placeholder="{{ __('rooms.input') }}" autofocus>
+                                <input id="room-message-input" type="text" class="form-control form-control-lg" placeholder="{{ __('rooms.input') }}" autofocus>
                                 <div class="input-group-append">
                                     <input id="room-message-submit" type="button" class="btn btn-outline-success" value="{{ __('rooms.submit') }}">
                                 </div>
