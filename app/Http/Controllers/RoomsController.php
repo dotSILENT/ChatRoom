@@ -22,7 +22,9 @@ class RoomsController extends Controller
      */
     public function index()
     {
-        $rooms = Room::allFiltered(Auth::check() ? Auth::user()->id : null)->orderBy('private', 'desc')->get();
+        $rooms = Room::allFiltered(Auth::check() ? Auth::user()->id : null)
+            ->orderBy('private', 'desc')
+            ->get();
             
         return view('index', compact('rooms'));
     }
@@ -67,6 +69,21 @@ class RoomsController extends Controller
     public function show($id)
     {
         $room = Room::findOrFail($id);
+
+        if(!$room->users()->where('id', Auth::user()->id)->exists())
+        {
+            // User isn't subscribed to this room
+            if($room->private && Auth::user()->id !== $room->owner->id)
+            {
+                // holla holla m8 this is a private one, you can only get added through an invite
+                return redirect()->route('home')->setStatusCode(401);
+            }
+            else
+            {
+                // Add him to the room
+                $room->users()->attach(Auth::user()->id);
+            }
+        }
         return view('rooms.show', compact('room'));
     }
 

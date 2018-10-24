@@ -10474,9 +10474,12 @@ a.text-dark:focus {
 /* List of users on the room */
 
 #chatroom-users {
-  border-left: 1px solid black;
-  background: #f8fafc;
-  overflow-y: scroll;
+  overflow-y: auto;
+}
+
+.room-message:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 5px;
 }
 
 .navbar-chatroom {

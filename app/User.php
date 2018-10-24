@@ -5,10 +5,11 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Traits\APIToken;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, APIToken;
 
     /**
      * The attributes that are mass assignable.
@@ -16,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'username', 'email', 'password',
+        'username', 'email', 'password'
     ];
 
     /**
@@ -25,15 +26,22 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'api_token', 'password', 'remember_token', 'email', 'email_verified_at'
     ];
 
     /**
      * Get chat rooms created by this user
-     * 
      */
-    public function ownedChatrooms()
+    public function ownedRooms()
     {
         return $this->hasMany(Room::class);
+    }
+
+    /**
+     * Get rooms this user is inside of
+     */
+    public function rooms()
+    {
+        return $this->belongsToMany(Room::class, 'room_users'); // many-to-many
     }
 }

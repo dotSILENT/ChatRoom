@@ -1,7 +1,11 @@
 /* List of users on the room */
 #chatroom-users
 {
-    border-left: 1px solid black;
-    background: $body-bg;
-    overflow-y: scroll;
+    overflow-y: auto;
+}
+
+.room-message:hover
+{
+    background-color: rgba(0,0,0,0.05);
+    border-radius: 5px;
 }
