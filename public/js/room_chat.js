@@ -112,9 +112,9 @@ var app = {
 };
 
 /** jquery */
-var jqMessagesBox = '#room-messages-box'; // gets changed to actual element specified here under document ready
-var jqMessageInput = '#room-message-input';
-var jqMessageSubmit = '#room-message-submit';
+var $messagesBox = '#room-messages-box'; // gets changed to actual element specified here under document ready
+var $messageInput = '#room-message-input';
+var $messageSubmit = '#room-message-submit';
 
 $(document).ready(function () {
     /** initialize our app */
@@ -123,23 +123,23 @@ $(document).ready(function () {
     app.init('/api', auth, roomID);
 
     /** initialize some jQuery variables to optimize the code */
-    jqMessagesBox = $(jqMessagesBox);
-    jqMessageInput = $(jqMessageInput);
-    jqMessageSubmit = $(jqMessageSubmit);
+    $messagesBox = $($messagesBox);
+    $messageInput = $($messageInput);
+    $messageSubmit = $($messageSubmit);
 
     fetchMessages();
 
     /**  Message sending event handlers */
-    jqMessageInput.on('keyup', function (key) {
-        if (key.keyCode == 13) jqMessageSubmit.click();
+    $messageInput.on('keyup', function (key) {
+        if (key.keyCode == 13) $messageSubmit.click();
     });
 
-    jqMessageSubmit.click(function () {
+    $messageSubmit.click(function () {
         onMessageSubmit();
     });
 
     /** Messages box scroll event */
-    jqMessagesBox.scroll(function () {
+    $messagesBox.scroll(function () {
         onMessagesBoxScroll();
     });
 });
@@ -148,11 +148,11 @@ $(document).ready(function () {
  * Gets called when a message is sent by the user
  */
 function onMessageSubmit() {
-    if (jqMessageInput.val().length <= 0) return;
+    if ($messageInput.val().length <= 0) return;
 
-    var msg = jqMessageInput.val();
-    jqMessageInput.val('');
-    jqMessageInput.focus();
+    var msg = $messageInput.val();
+    $messageInput.val('');
+    $messageInput.focus();
 
     axios.post(app.api + '/room/' + app.roomID + '/messages', {
         message: msg
@@ -166,7 +166,7 @@ function onMessageSubmit() {
  * Used for fetching older messages
  */
 function onMessagesBoxScroll() {
-    if (jqMessagesBox.scrollTop() == 0 && jqMessagesBox.prop('scrollHeight') > jqMessagesBox.height()) fetchMessages('before=' + app.firstMessageID);
+    if ($messagesBox.scrollTop() == 0 && $messagesBox.prop('scrollHeight') > $messagesBox.height()) fetchMessages('before=' + app.firstMessageID);
 }
 
 /**
@@ -221,28 +221,40 @@ function renderMessages() {
     if (app.renderedMessages == app.messagesCount) return;
 
     // when upwards = true it means that we load previous messages, therefore if user has scrolled up, we need to calculate an offset to keep him in the same place
-    var bottomScrollOffset = jqMessagesBox.prop('scrollHeight') - jqMessagesBox.scrollTop(); // we keep the same bottom offset after rendering messages
-    var autoScroll = bottomScrollOffset - jqMessagesBox.height() < 50;
+    var bottomScrollOffset = $messagesBox.prop('scrollHeight') - $messagesBox.scrollTop(); // we keep the same bottom offset after rendering messages
+    var autoScroll = bottomScrollOffset - $messagesBox.height() < 50;
 
     $('.room-message-block').remove();
 
     var prevMsg = null;
+    var $prevMsgBody = null;
+    var $prevMsgBlock = null;
     app.renderedMessages = 0;
+
     $.each(app.messages, function (index, msg) {
         app.renderedMessages++;
-        if (prevMsg != null && prevMsg.user.username === msg.user.username) {
-            // just append this message to the message block
-            $('[data-message-id=' + prevMsg.id + ']').after('<div class="room-message" data-message-id="' + msg.id + '">\n                ' + msg.message + '\n            </div>');
-        } else // create a new message block
-            {
-                jqMessagesBox.append('\n                <div class="row room-message-block">\n                    <div class="col-1 px-0">\n                        <div style="height: 40px; width: 40px; border-radius: 50%; background-color: black"></div>\n                    </div>\n                    <div class="col-11 pl-lg-0">\n                        <h5 class="text-primary float-left">' + msg.user.username + '</h5>\n                        <small class="text-muted float-right">' + msg.created_at + '</small>\n                        <div class="clearfix"></div>\n                        <div class="room-message" data-message-id="' + msg.id + '">\n                            ' + msg.message + '\n                        </div>\n                    </div>\n                    <hr class="w-100">\n                </div>');
-            }
+        if (prevMsg == null || prevMsg.user.username !== msg.user.username) {
+            // Create the message block first
+            $prevMsgBlock = $('<div>', { "class": "row room-message-block" });
+            var $avcol = $('<div>', { "class": "col-1 px-0" }).append('<div style="height: 40px; width: 40px; border-radius: 50%; background-color: black"></div>');
+
+            $prevMsgBody = $('<div>', { "class": "col-11 pl-lg-0" }).append('<h5 class="text-primary float-left">' + msg.user.username + '</h5>\n                    <small class="text-muted float-right">' + msg.created_at + '</small>\n                    <div class="clearfix"></div>');
+
+            $avcol.appendTo($prevMsgBlock);
+            $prevMsgBody.appendTo($prevMsgBlock);
+            $prevMsgBlock.appendTo($messagesBox);
+            $prevMsgBlock.append('<hr class="w-100">');
+        }
+
+        var $msg = $('<div>', { "class": "room-message", "data-message-id": msg.id }).html(msg.message);
+        console.log($prevMsgBody);
+        $msg.appendTo($prevMsgBody);
         prevMsg = msg;
     });
 
-    var newScroll = jqMessagesBox.prop('scrollHeight') - bottomScrollOffset;
+    var newScroll = $messagesBox.prop('scrollHeight') - bottomScrollOffset;
 
-    if (autoScroll || upwards) jqMessagesBox.scrollTop(autoScroll ? jqMessagesBox.prop('scrollHeight') : newScroll);
+    if (autoScroll || upwards) $messagesBox.scrollTop(autoScroll ? $messagesBox.prop('scrollHeight') : newScroll);
 }
 
 /***/ })

@@ -37,9 +37,9 @@ var app = {
 
 
 /** jquery */
-var jqMessagesBox = '#room-messages-box'; // gets changed to actual element specified here under document ready
-var jqMessageInput = '#room-message-input';
-var jqMessageSubmit = '#room-message-submit';
+var $messagesBox = '#room-messages-box'; // gets changed to actual element specified here under document ready
+var $messageInput = '#room-message-input';
+var $messageSubmit = '#room-message-submit';
 
 
 $(document).ready(function ()
@@ -50,23 +50,23 @@ $(document).ready(function ()
     app.init('/api', auth, roomID);
 
     /** initialize some jQuery variables to optimize the code */
-    jqMessagesBox = $(jqMessagesBox);
-    jqMessageInput = $(jqMessageInput);
-    jqMessageSubmit = $(jqMessageSubmit);
+    $messagesBox = $($messagesBox);
+    $messageInput = $($messageInput);
+    $messageSubmit = $($messageSubmit);
 
     fetchMessages();
 
     /**  Message sending event handlers */
-    jqMessageInput.on('keyup', function (key)
+    $messageInput.on('keyup', function (key)
     {
         if(key.keyCode == 13)
-            jqMessageSubmit.click();
+            $messageSubmit.click();
     });
 
-    jqMessageSubmit.click(function() { onMessageSubmit() });
+    $messageSubmit.click(function() { onMessageSubmit() });
 
     /** Messages box scroll event */
-    jqMessagesBox.scroll(function () { onMessagesBoxScroll() });
+    $messagesBox.scroll(function () { onMessagesBoxScroll() });
 });
 
 /**
@@ -74,12 +74,12 @@ $(document).ready(function ()
  */
 function onMessageSubmit()
 {
-    if(jqMessageInput.val().length <= 0)
+    if($messageInput.val().length <= 0)
         return;
 
-    let msg = jqMessageInput.val();
-    jqMessageInput.val('');
-    jqMessageInput.focus();
+    let msg = $messageInput.val();
+    $messageInput.val('');
+    $messageInput.focus();
 
     axios.post(`${app.api}/room/${app.roomID}/messages`,
     {
@@ -97,7 +97,7 @@ function onMessageSubmit()
  */
 function onMessagesBoxScroll()
 {
-    if(jqMessagesBox.scrollTop() == 0 && jqMessagesBox.prop('scrollHeight') > jqMessagesBox.height())
+    if($messagesBox.scrollTop() == 0 && $messagesBox.prop('scrollHeight') > $messagesBox.height())
         fetchMessages(`before=${app.firstMessageID}`);
 }
 
@@ -162,46 +162,45 @@ function renderMessages(upwards = false)
         return;
 
     // when upwards = true it means that we load previous messages, therefore if user has scrolled up, we need to calculate an offset to keep him in the same place
-    let bottomScrollOffset = jqMessagesBox.prop('scrollHeight') - jqMessagesBox.scrollTop(); // we keep the same bottom offset after rendering messages
-    let autoScroll = (bottomScrollOffset - jqMessagesBox.height() < 50);
+    let bottomScrollOffset = $messagesBox.prop('scrollHeight') - $messagesBox.scrollTop(); // we keep the same bottom offset after rendering messages
+    let autoScroll = (bottomScrollOffset - $messagesBox.height() < 50);
 
     $('.room-message-block').remove();
 
     let prevMsg = null;
+    let $prevMsgBody = null;
+    let $prevMsgBlock = null;
     app.renderedMessages = 0;
+    
     $.each(app.messages, function(index, msg)
     {
         app.renderedMessages++;
-        if(prevMsg != null && prevMsg.user.username === msg.user.username)
+        if(prevMsg == null || prevMsg.user.username !== msg.user.username)
         {
-            // just append this message to the message block
-            $(`[data-message-id=${prevMsg.id}]`).after(`<div class="room-message" data-message-id="${msg.id}">
-                ${msg.message}
-            </div>`);
+            // Create the message block first
+            $prevMsgBlock = $('<div>', {"class": "row room-message-block"});
+            let $avcol = $('<div>', {"class": "col-1 px-0"})
+                .append('<div style="height: 40px; width: 40px; border-radius: 50%; background-color: black"></div>');
+
+            $prevMsgBody = $('<div>', {"class": "col-11 pl-lg-0"})
+                .append(`<h5 class="text-primary float-left">${msg.user.username}</h5>
+                    <small class="text-muted float-right">${msg.created_at}</small>
+                    <div class="clearfix"></div>`);
+
+            $avcol.appendTo($prevMsgBlock);
+            $prevMsgBody.appendTo($prevMsgBlock);
+            $prevMsgBlock.appendTo($messagesBox);
+            $prevMsgBlock.append('<hr class="w-100">');
         }
-        else // create a new message block
-        {
-            jqMessagesBox.append(`
-                <div class="row room-message-block">
-                    <div class="col-1 px-0">
-                        <div style="height: 40px; width: 40px; border-radius: 50%; background-color: black"></div>
-                    </div>
-                    <div class="col-11 pl-lg-0">
-                        <h5 class="text-primary float-left">${msg.user.username}</h5>
-                        <small class="text-muted float-right">${msg.created_at}</small>
-                        <div class="clearfix"></div>
-                        <div class="room-message" data-message-id="${msg.id}">
-                            ${msg.message}
-                        </div>
-                    </div>
-                    <hr class="w-100">
-                </div>`);
-        }
+
+        let $msg = $('<div>', {"class": "room-message", "data-message-id": msg.id}).html(msg.message);
+        console.log($prevMsgBody);
+        $msg.appendTo($prevMsgBody);
         prevMsg = msg;
     });
 
-    let newScroll = jqMessagesBox.prop('scrollHeight') - bottomScrollOffset;
+    let newScroll = $messagesBox.prop('scrollHeight') - bottomScrollOffset;
 
     if(autoScroll || upwards)
-        jqMessagesBox.scrollTop(autoScroll ? jqMessagesBox.prop('scrollHeight') : newScroll);
+        $messagesBox.scrollTop(autoScroll ? $messagesBox.prop('scrollHeight') : newScroll);
 }
