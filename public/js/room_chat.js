@@ -88,6 +88,7 @@ var app = {
     firstMessageID: 0,
     messagesCount: 0,
     renderedMessages: 0,
+    lastSeenMessage: 0,
     messages: [],
     /**
      * 
@@ -142,7 +143,25 @@ $(document).ready(function () {
     $messagesBox.scroll(function () {
         onMessagesBoxScroll();
     });
+
+    /* Handle window resizing event to calculate the messages box max height */
+    calculateHeights();
+    $(window).resize(function () {
+        calculateHeights();
+    });
 });
+
+/** An ugly hack for calculating the max-height to fill the screen. Should be made as some actual flexbox solution instead. */
+function calculateHeights() {
+    var wnHeight = $(window).height();
+    var boxHeight = $messagesBox.height();
+    var cardHeight = $('#room-messages-card').height();
+    var cardPos = $('#room-messages-card').offset();
+
+    var offset = boxHeight + (wnHeight - (cardHeight + cardPos.top)) - 10;
+    if (offset < 480) offset = 480;
+    $($messagesBox).css('max-height', offset + 'px');
+}
 
 /**
  * Gets called when a message is sent by the user
@@ -247,7 +266,9 @@ function renderMessages() {
         }
 
         var $msg = $('<div>', { "class": "room-message", "data-message-id": msg.id }).html(msg.message);
-        console.log($prevMsgBody);
+
+        if (document.hasFocus() && msg.id > app.lastSeenMessage) app.lastSeenMessage = msg.id;else if (!document.hasFocus() && msg.id > app.lastSeenMessage) $msg.addClass('room-new-message');
+
         $msg.appendTo($prevMsgBody);
         prevMsg = msg;
     });

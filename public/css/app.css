@@ -10482,6 +10482,16 @@ a.text-dark:focus {
   border-radius: 5px;
 }
 
+.room-new-message {
+  background-color: rgba(255, 8, 0, 0.05);
+  border-radius: 5px;
+}
+
+html,
+body {
+  height: 100vh;
+}
+
 .navbar-chatroom {
   background-color: #6ea7d2;
 }

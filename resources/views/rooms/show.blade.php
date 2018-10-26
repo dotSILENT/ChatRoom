@@ -9,7 +9,7 @@
 @section('content')
     <div  class="row">
         <div class="col-12">
-            <div class="card">
+            <div id="room-messages-card" class="card">
                 <div class="card-header">
                     {{ $room->name }}
                 </div>

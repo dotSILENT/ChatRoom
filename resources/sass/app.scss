@@ -11,6 +11,10 @@
 // Single chat room styles
 @import 'room';
 
+html,body
+{
+  height: 100vh;
+}
 
 .navbar-chatroom 
 {
