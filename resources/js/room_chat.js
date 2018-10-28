@@ -79,10 +79,10 @@ function calculateHeights()
 {
     let wnHeight = $(window).height();
     let boxHeight = $messagesBox.height();
-    let cardHeight = $('#room-messages-card').height();
+    let cardHeight = $('#room-messages-card').outerHeight();
     let cardPos = $('#room-messages-card').offset();
 
-    let offset = boxHeight + (wnHeight - (cardHeight + cardPos.top)) -10;
+    let offset = boxHeight + (wnHeight - (cardHeight + cardPos.top));
     if(offset < 480)
         offset = 480;
     $($messagesBox).css('max-height', `${offset}px`);

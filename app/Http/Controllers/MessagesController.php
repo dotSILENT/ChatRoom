@@ -12,6 +12,7 @@ use App\Room;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\MessageResource;
+use App\Events\NewRoomMessage;
 
 class MessagesController extends Controller
 {
@@ -67,7 +68,7 @@ class MessagesController extends Controller
     public function store(Request $request, $room)
     {
         $vdata = $request->validate([
-            'message' => 'required|string|max:200'
+            'message' => 'required|string|max:65535'
         ]);
         
         // TODO: Handle file uploads
@@ -81,7 +82,7 @@ class MessagesController extends Controller
         $msg->save();
 
         // Broadcast event
-        event(new \App\Events\NewRoomMessage($msg));
+        event(new NewRoomMessage($msg));
         return response()->json(['status' => 'success'], 200);
     }
 }
