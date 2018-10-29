@@ -243,7 +243,7 @@ function renderMessages() {
             $prevMsgBlock = $('<div>', { "class": "row room-message-block" });
             var $avcol = $('<div>', { "class": "col-1 px-0" }).append('<div style="height: 40px; width: 40px; border-radius: 50%; background-color: black"></div>');
 
-            $prevMsgBody = $('<div>', { "class": "col-11 pl-lg-0" }).append('<h5 class="text-primary float-left">' + msg.user.username + '</h5>\n                    <small class="text-muted float-right">' + msg.created_at + '</small>\n                    <div class="clearfix"></div>');
+            $prevMsgBody = $('<div>', { "class": "col-11 pl-lg-0" }).append($('<h5>', { 'class': 'text-primary float-left' }).text(msg.user.username)).append('<small class="text-muted float-right">' + msg.created_at + '</small>\n                    <div class="clearfix"></div>');
 
             $avcol.appendTo($prevMsgBlock);
             $prevMsgBody.appendTo($prevMsgBlock);
@@ -251,7 +251,7 @@ function renderMessages() {
             $prevMsgBlock.append('<hr class="w-100">');
         }
 
-        var $msg = $('<div>', { "class": "room-message", "data-message-id": msg.id }).html(msg.message);
+        var $msg = $('<div>', { "class": "room-message", "data-message-id": msg.id }).text(msg.message);
 
         if (document.hasFocus() && msg.id > app.lastSeenMessage) app.lastSeenMessage = msg.id;else if (!document.hasFocus() && msg.id > app.lastSeenMessage) $msg.addClass('room-new-message');
 

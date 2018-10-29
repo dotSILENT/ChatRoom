@@ -190,8 +190,8 @@ function renderMessages(upwards = false)
                 .append('<div style="height: 40px; width: 40px; border-radius: 50%; background-color: black"></div>');
 
             $prevMsgBody = $('<div>', {"class": "col-11 pl-lg-0"})
-                .append(`<h5 class="text-primary float-left">${msg.user.username}</h5>
-                    <small class="text-muted float-right">${msg.created_at}</small>
+                .append($('<h5>', {'class': 'text-primary float-left'}).text(msg.user.username))
+                .append(`<small class="text-muted float-right">${msg.created_at}</small>
                     <div class="clearfix"></div>`);
 
             $avcol.appendTo($prevMsgBlock);
@@ -200,7 +200,7 @@ function renderMessages(upwards = false)
             $prevMsgBlock.append('<hr class="w-100">');
         }
 
-        let $msg = $('<div>', {"class": "room-message", "data-message-id": msg.id}).html(msg.message);
+        let $msg = $('<div>', {"class": "room-message", "data-message-id": msg.id}).text(msg.message);
         
         if(document.hasFocus() && msg.id > app.lastSeenMessage)
             app.lastSeenMessage = msg.id;
