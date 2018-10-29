@@ -113,60 +113,27 @@ var app = {
 };
 
 /** jquery */
-var $messagesBox = '#room-messages-box'; // gets changed to actual element specified here under document ready
-var $messageInput = '#room-message-input';
-var $messageSubmit = '#room-message-submit';
+var $messagesBox = $('#room-messages-box');
+var $messageInput = $('#room-message-input');
+var $messageSubmit = $('#room-message-submit');
 
+/* Initialize things on document load just to do it after the page loads */
 $(document).ready(function () {
     /** initialize our app */
     var auth = 'Bearer ' + document.head.querySelector('meta[name="apiToken"]').content;
     var roomID = document.head.querySelector('meta[name="roomID"]').content;
     app.init('/api', auth, roomID);
 
-    /** initialize some jQuery variables to optimize the code */
-    $messagesBox = $($messagesBox);
-    $messageInput = $($messageInput);
-    $messageSubmit = $($messageSubmit);
-
     fetchMessages();
-
-    /**  Message sending event handlers */
-    $messageInput.on('keyup', function (key) {
-        if (key.keyCode == 13) $messageSubmit.click();
-    });
-
-    $messageSubmit.click(function () {
-        onMessageSubmit();
-    });
-
-    /** Messages box scroll event */
-    $messagesBox.scroll(function () {
-        onMessagesBoxScroll();
-    });
-
-    /* Handle window resizing event to calculate the messages box max height */
-    calculateHeights();
-    $(window).resize(function () {
-        calculateHeights();
-    });
 });
 
-/** An ugly hack for calculating the max-height to fill the screen. Should be made as some actual flexbox solution instead. */
-function calculateHeights() {
-    var wnHeight = $(window).height();
-    var boxHeight = $messagesBox.height();
-    var cardHeight = $('#room-messages-card').outerHeight();
-    var cardPos = $('#room-messages-card').offset();
+/**  Message sending event handlers */
+$messageInput.on('keyup', function (key) {
+    if (key.keyCode == 13) $messageSubmit.click();
+});
 
-    var offset = boxHeight + (wnHeight - (cardHeight + cardPos.top));
-    if (offset < 480) offset = 480;
-    $($messagesBox).css('max-height', offset + 'px');
-}
-
-/**
- * Gets called when a message is sent by the user
- */
-function onMessageSubmit() {
+/** Send the message via api */
+$messageSubmit.on('click', function () {
     if ($messageInput.val().length <= 0) return;
 
     var msg = $messageInput.val();
@@ -178,14 +145,33 @@ function onMessageSubmit() {
     }, {
         headers: app.axiosHeaders
     }).catch(function (error) {});
-}
+});
 
 /**
- * Gets called when the messages box is scrolled
- * Used for fetching older messages
+ * Message box scroll event
+ * Used for loading older messages
  */
-function onMessagesBoxScroll() {
+$messagesBox.scroll(function () {
     if ($messagesBox.scrollTop() == 0 && $messagesBox.prop('scrollHeight') > $messagesBox.height()) fetchMessages('before=' + app.firstMessageID);
+});
+
+/* Handle window resizing event to calculate the messages box max height */
+$(window).resize(function () {
+    calculateHeights();
+});
+
+calculateHeights();
+/** An ugly hack for calculating the max-height to fill the screen. Should be made as some actual flexbox solution instead. */
+function calculateHeights() {
+    var wnHeight = $(window).height();
+    var boxHeight = $messagesBox.height();
+    var cardHeight = $('#room-messages-card').outerHeight();
+    var cardPos = $('#room-messages-card').offset();
+
+    var offset = boxHeight + (wnHeight - (cardHeight + cardPos.top));
+    if (offset < 480) offset = 480;
+    $($messagesBox).css('max-height', offset + 'px');
+    $($messagesBox).css('height', offset + 'px');
 }
 
 /**

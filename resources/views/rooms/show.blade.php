@@ -3,7 +3,10 @@
 @section('head')
     <meta name="roomID" content="{{ $room->id }}">
     <meta name="apiToken" content="{{ Auth::user()->api_token }}">
-    <script src="{{ asset('js/room_chat.js') }}"></script>
+@endsection
+
+@section('bottomscripts')
+<script src="{{ asset('js/room_chat.js') }}"></script>
 @endsection
 
 @section('content')
