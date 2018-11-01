@@ -30,6 +30,18 @@ class User extends Authenticatable
     ];
 
     /**
+     * Return the display name (username or nickname if set)
+     *
+     * @return string
+     */
+    public function displayName()
+    {
+        if(strlen($this->nickname) <= 0)
+            return $this->username;
+        return $this->nickname;
+    }
+
+    /**
      * Get chat rooms created by this user
      */
     public function ownedRooms()

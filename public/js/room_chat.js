@@ -178,8 +178,8 @@ function calculateHeights() {
  * Fetch an array of messages from the server via AJAX GET
  * Used when loading the page for the first time & for fetching old messages
  * 
- * @param string filter Filter to be used for fetching, null by default. Uses: "after=msgid", "before=msgid"
- * @return string 'succes' if messages were fetched, 'error' on error and 'empty' if no messages were fetched
+ * @param {String} filter Filter to be used for fetching, null by default. Uses: "after=msgid", "before=msgid"
+ * @return {String} 'succes' if messages were fetched, 'error' on error and 'empty' if no messages were fetched
  */
 function fetchMessages() {
     var filter = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
@@ -218,7 +218,7 @@ function fetchMessages() {
 /**
  * Render messages onto the messages box
  * 
- * @param bool upwards True when messages were prepended, to preserve scroll position
+ * @param {Boolean} upwards Set true when messages were prepended, to preserve scroll position. False by default.
  */
 function renderMessages() {
     var upwards = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;

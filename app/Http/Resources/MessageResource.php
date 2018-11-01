@@ -20,7 +20,7 @@ class MessageResource extends Resource
             'message' => $this->content,
             'created_at' => $this->created_at->toDateTimeString(),
             'user' => [
-                'username' => $this->user->username
+                'username' => $this->user->displayName()
             ]
         ];
     }

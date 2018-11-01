@@ -39,7 +39,7 @@
                                             <div class="col-2">
                                                 <div style="background: red; height: 100%; width: 100%; border-radius: 50%"></div>
                                             </div>
-                                            <div class="col-10 pl-1">
+                                            <div class="col-10 pl-1" style="overflow-x: hidden; white-space: nowrap;">
                                                 <span>{{ $user->username }}</span>
                                             </div>
                                         </div>
