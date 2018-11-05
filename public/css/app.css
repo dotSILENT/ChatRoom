@@ -10534,3 +10534,13 @@ body {
   background-color: rgba(211, 211, 211, 0.562);
 }
 
+.avatar-big {
+  max-width: 130px;
+  max-height: 130px;
+}
+
+.avatar-small {
+  max-width: 40px;
+  max-height: 40px;
+}
+

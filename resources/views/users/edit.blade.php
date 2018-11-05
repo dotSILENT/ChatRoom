@@ -18,8 +18,11 @@
                                 <div class="card card-body bg-light">
                                     <div class="row">
                                         <div class="col-lg-3 text-center">
-                                            <h5>{{ __('Avatar') }}</h5>
-                                        <img src="{{ asset('storage/avatars/default.jpg') }}" class="img-fluid rounded-circle" style="max-width: 130px; max-height: 130px">
+                                            <img src="{{ asset('storage/avatars/'. $user->avatar) }}" class="img-fluid rounded-circle avatar-big d-block mx-auto">
+                                            <div class="btn-group-vertical" role="group">
+                                                <button type="button" class="btn btn-outline-primary mt-2">{{ __('user.avatar_change') }}</button>
+                                                <button type="button" class="btn btn-outline-danger">{{ __('user.avatar_delete') }}</button>
+                                            </div>
                                         </div>
                                         <div class="col-lg-9">
                                             <label for="displayname">{{ __('user.displayname') }}</label>
