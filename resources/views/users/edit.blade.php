@@ -17,9 +17,9 @@
                             <div class="tab-pane fade show active" id="list-account" role="tabpanel" aria-labelledby="list-account-list">
                                 <div class="card card-body bg-light">
                                     <div class="row">
-                                        <div class="col-lg-3">
+                                        <div class="col-lg-3 text-center">
                                             <h5>{{ __('Avatar') }}</h5>
-                                            <div style="background: black; height:100px; width:100px; border-radius: 50%"></div>
+                                        <img src="{{ asset('storage/avatars/default.jpg') }}" class="img-fluid rounded-circle" style="max-width: 130px; max-height: 130px">
                                         </div>
                                         <div class="col-lg-9">
                                             <label for="displayname">{{ __('user.displayname') }}</label>

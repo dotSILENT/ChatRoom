@@ -19,9 +19,9 @@ Route::resource('rooms', 'RoomsController');
 // User profiles
 Route::group(['prefix' => 'users', 'as' => 'users.'], function()
 {
-    Route::get('/{id}', 'UsersController@show')->name('show');
-    Route::get('/{id}/edit', 'UsersController@edit')->name('edit');
-    Route::put('/{id}/update', 'UsersController@update')->name('update');
+    Route::get('{id}', 'UsersController@show')->name('show');
+    Route::get('{id}/edit', 'UsersController@edit')->name('edit');
+    Route::put('{id}/update', 'UsersController@update')->name('update');
 });
 
 Auth::routes();
