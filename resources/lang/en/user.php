@@ -7,5 +7,7 @@ return [
     'displayname' => 'Displayed user name',
     'displayname_help' => 'The real user name (for logging in) will still stay the same.',
     'save' => 'Save changes',
-    'confirm_password' => 'Confirm password'
+    'confirm_password' => 'Confirm password',
+    'avatar_change' => 'Change avatar',
+    'avatar_delete' => 'Delete avatar'
 ];

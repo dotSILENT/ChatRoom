@@ -7,5 +7,7 @@ return [
     'displayname' => 'Wyświetlana nazwa użytkownika',
     'displayname_help' => 'Nazwa użytkownika (do logowania) nadal pozostanie taka sama',
     'save' => 'Zapisz zmiany',
-    'confirm_password' => 'Potwierdź hasło'
+    'confirm_password' => 'Potwierdź hasło',
+    'avatar_change' => 'Zmień avatar',
+    'avatar_delete' => 'Usuń avatar'
 ];

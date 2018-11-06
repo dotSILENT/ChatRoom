@@ -10535,12 +10535,12 @@ body {
 }
 
 .avatar-big {
-  max-width: 130px;
-  max-height: 130px;
+  width: 130px;
+  height: auto;
 }
 
 .avatar-small {
-  max-width: 40px;
-  max-height: 40px;
+  width: 40px;
+  height: auto;
 }
 

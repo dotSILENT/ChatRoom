@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\Resource;
+use App\Http\Resources\UserResource;
 
 class MessageResource extends Resource
 {
@@ -19,9 +20,7 @@ class MessageResource extends Resource
             'type' => $this->type,
             'message' => $this->content,
             'created_at' => $this->created_at->toDateTimeString(),
-            'user' => [
-                'username' => $this->user->displayName()
-            ]
+            'user' => new UserResource($this->user)
         ];
     }
 }

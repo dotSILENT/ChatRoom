@@ -238,10 +238,10 @@ function renderMessages() {
 
     $.each(app.messages, function (index, msg) {
         app.renderedMessages++;
-        if (prevMsg == null || prevMsg.user.username !== msg.user.username) {
+        if (prevMsg == null || prevMsg.user.id !== msg.user.id) {
             // Create the message block first
             $prevMsgBlock = $('<div>', { "class": "row room-message-block" });
-            var $avcol = $('<div>', { "class": "col-1 px-0" }).append('<div style="height: 40px; width: 40px; border-radius: 50%; background-color: black"></div>');
+            var $avcol = $('<div>', { "class": "col-1 px-0" }).append('<img src="/storage/avatars/' + msg.user.avatar + '" class="img-fluid rounded-circle avatar-small"/>');
 
             $prevMsgBody = $('<div>', { "class": "col-11 pl-lg-0" }).append($('<h5>', { 'class': 'text-primary float-left' }).text(msg.user.username)).append('<small class="text-muted float-right">' + msg.created_at + '</small>\n                    <div class="clearfix"></div>');
 

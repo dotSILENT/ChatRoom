@@ -17,14 +17,14 @@
                             <div class="tab-pane fade show active" id="list-account" role="tabpanel" aria-labelledby="list-account-list">
                                 <div class="card card-body bg-light">
                                     <div class="row">
-                                        <div class="col-lg-3 text-center">
-                                            <img src="{{ asset('storage/avatars/'. $user->avatar) }}" class="img-fluid rounded-circle avatar-big d-block mx-auto">
-                                            <div class="btn-group-vertical" role="group">
-                                                <button type="button" class="btn btn-outline-primary mt-2">{{ __('user.avatar_change') }}</button>
-                                                <button type="button" class="btn btn-outline-danger">{{ __('user.avatar_delete') }}</button>
+                                        <div class="col text-center">
+                                            <img src="{{ asset('storage/avatars/'. $user->avatar) }}" class="rounded-circle avatar-big">
+                                            <div class="btn-group-vertical mt-2" role="group">
+                                                <button type="button" class="btn btn-outline-primary" style="max-width: 100%">{{ __('user.avatar_change') }}</button>
+                                                <button type="button" class="btn btn-outline-danger" style="max-width: 100%">{{ __('user.avatar_delete') }}</button>
                                             </div>
                                         </div>
-                                        <div class="col-lg-9">
+                                        <div class="col-12 col-lg-auto">
                                             <label for="displayname">{{ __('user.displayname') }}</label>
                                             <input type="text" id="displayname" name="displayname" class="form-control" value="{{ $user->displayName() }}" aria-describedby="displaynameHelp" required>
                                             <small id="displaynameHelp" class="form-text text-muted">{{ __('user.displayname_help') }}</small>
