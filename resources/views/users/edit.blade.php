@@ -16,29 +16,63 @@
                         <div class="tab-content" id="nav-tabContent">
                             <div class="tab-pane fade show active" id="list-account" role="tabpanel" aria-labelledby="list-account-list">
                                 <div class="card card-body bg-light">
-                                    <div class="row">
-                                        <div class="col text-center">
-                                            <img src="{{ asset('storage/avatars/'. $user->avatar) }}" class="rounded-circle avatar-big">
-                                            <div class="btn-group-vertical mt-2" role="group">
-                                                <button type="button" class="btn btn-outline-primary" style="max-width: 100%">{{ __('user.avatar_change') }}</button>
-                                                <button type="button" class="btn btn-outline-danger" style="max-width: 100%">{{ __('user.avatar_delete') }}</button>
+                                    <form action="{{ route('users.update', ($user->id == Auth::user()->id) ? '@me' : $user->id) }}" method="POST">
+                                        @csrf
+                                        @method('put')
+                                        <div class="row">
+                                            <div class="col text-center">
+                                                <img src="{{ asset('storage/avatars/'. $user->avatar) }}" class="rounded-circle avatar-big">
+                                                <div class="btn-group-vertical mt-2" role="group">
+                                                    <button type="button" class="btn btn-outline-primary" style="max-width: 100%">{{ __('user.avatar_change') }}</button>
+                                                    <button type="button" class="btn btn-outline-danger" style="max-width: 100%">{{ __('user.avatar_delete') }}</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-auto">
+                                                <div class="form-group">
+                                                    <label for="displayname">{{ __('user.displayname') }}</label>
+                                                    <input type="text" id="displayname" name="displayname" class="form-control" value="{{ $user->displayName() }}" aria-describedby="displaynameHelp">
+                                                    <small id="displaynameHelp" class="form-text text-muted">{{ __('user.displayname_help') }}</small>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="email">{{ __('E-Mail') }}</label>
+                                                    <input type="text" id="email" name="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ $user->email }}" required>
+                                                    @if ($errors->has('email'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('email') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+
+                                                <div class="form-group mt-5">
+                                                    <label for="currentpass">{{ __('user.current_password') }}</label>
+                                                    <input type="password" id="currentpass" name="currentpass" class="form-control{{ $errors->has('currentpass') ? ' is-invalid' : '' }}" required>
+                                                    @if ($errors->has('currentpass'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $errors->first('currentpass') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="collapse" data-target="#passwordChange">Zmiana hasła</button>
+                                                    <div class="collapse {{$errors->has('newpass') ? 'show' : '' }}" id="passwordChange">
+                                                        <div class="form-group">
+                                                            <label for="newpass">{{ __('user.new_password') }}</label>
+                                                            <input type="password" id="newpass" name="newpass" class="form-control{{ $errors->has('newpass') ? ' is-invalid' : '' }}">
+                                                            @if ($errors->has('newpass'))
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $errors->first('newpass') }}</strong>
+                                                                </span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-lg-auto">
-                                            <label for="displayname">{{ __('user.displayname') }}</label>
-                                            <input type="text" id="displayname" name="displayname" class="form-control" value="{{ $user->displayName() }}" aria-describedby="displaynameHelp" required>
-                                            <small id="displaynameHelp" class="form-text text-muted">{{ __('user.displayname_help') }}</small>
-                                            
-                                            <label for="email">{{ __('E-Mail') }}</label>
-                                            <input type="text" id="email" name="email" class="form-control" value="{{ $user->email }}" required>
-
-                                            <label for="password" class="mt-5">{{ __('user.confirm_password') }}</label>
-                                            <input type="password" id="password" name="password" class="form-control" required>
+                                        <div class="text-right mt-2">
+                                            <button type="submit" class="btn btn-outline-success">{{ __('user.save') }}</button>
                                         </div>
-                                    </div>
-                                    <div class="text-right mt-2">
-                                        <button type="submit" class="btn btn-outline-success">{{ __('user.save') }}</button>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="list-privacy" role="tabpanel" aria-labelledby="list-privacy-list">
