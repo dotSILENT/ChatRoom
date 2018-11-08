@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Carbon;
 
 class UsersController extends Controller
 {
@@ -60,7 +62,8 @@ class UsersController extends Controller
             'currentpass' => 'required|string',
             'newpass' => 'nullable|string|min:6',
             'email' => 'nullable|email|unique:users,email,'. $user->id,
-            'displayname' => 'nullable|string'
+            'displayname' => 'nullable|string',
+            'avatar' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         if(!Hash::check($request->input('currentpass'), $user->password))
@@ -78,6 +81,20 @@ class UsersController extends Controller
         
         if($request->has('newpass') && !empty($request->input('newpass')))
             $user->password = Hash::make($request->input('newpass'));
+
+        // Handle avatar upload
+        if($request->hasFile('avatar') && $request->file('avatar')->isValid())
+        {
+            if($user->avatar != 'default.jpg')
+            {
+                // delete previous file
+                Storage::disk('public')->delete('avatars/'. $user->avatar);
+            }
+
+            // generate a unique name for the avatar
+            $user->avatar = 'avatar_'. str_random(5) .'_'. Carbon::now()->timestamp .'.'. $request->file('avatar')->getClientOriginalExtension();
+            Storage::disk('public')->putFileAs('avatars', $request->file('avatar'), $user->avatar);
+        }
 
         $user->update();
 

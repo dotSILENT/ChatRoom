@@ -16,15 +16,18 @@
                         <div class="tab-content" id="nav-tabContent">
                             <div class="tab-pane fade show active" id="list-account" role="tabpanel" aria-labelledby="list-account-list">
                                 <div class="card card-body bg-light">
-                                    <form action="{{ route('users.update', ($user->id == Auth::user()->id) ? '@me' : $user->id) }}" method="POST">
+                                    <form action="{{ route('users.update', ($user->id == Auth::user()->id) ? '@me' : $user->id) }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         @method('put')
                                         <div class="row">
                                             <div class="col text-center">
-                                                <img src="{{ asset('storage/avatars/'. $user->avatar) }}" class="rounded-circle avatar-big">
+                                                <img id="avatarPreview" src="{{ asset('storage/avatars/'. $user->avatar) }}" class="rounded-circle avatar-big">
                                                 <div class="btn-group-vertical mt-2" role="group">
-                                                    <button type="button" class="btn btn-outline-primary" style="max-width: 100%">{{ __('user.avatar_change') }}</button>
-                                                    <button type="button" class="btn btn-outline-danger" style="max-width: 100%">{{ __('user.avatar_delete') }}</button>
+                                                    <label class="btn btn-outline-primary">
+                                                        {{ __('user.avatar_change') }}
+                                                        <input type="file" id="avatar" name="avatar" accept="image/png,image/gif,image/jpeg" class="d-none" onchange="onAvatarChange(this)" hidden>
+                                                    </label>
+                                                    <button type="button" class="btn btn-outline-danger">{{ __('user.avatar_delete') }}</button>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-lg-auto">
@@ -72,6 +75,12 @@
                                         <div class="text-right mt-2">
                                             <button type="submit" class="btn btn-outline-success">{{ __('user.save') }}</button>
                                         </div>
+                                        <script>
+                                            function onAvatarChange(input)
+                                            {
+                                                document.getElementById('avatarPreview').src = URL.createObjectURL(input.files[0])
+                                            }
+                                        </script>
                                     </form>
                                 </div>
                             </div>
