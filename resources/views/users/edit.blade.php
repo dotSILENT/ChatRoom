@@ -27,7 +27,8 @@
                                                         {{ __('user.avatar_change') }}
                                                         <input type="file" id="avatar" name="avatar" accept="image/png,image/gif,image/jpeg" class="d-none" onchange="onAvatarChange(this)" hidden>
                                                     </label>
-                                                    <button type="button" class="btn btn-outline-danger">{{ __('user.avatar_delete') }}</button>
+                                                    <input type="checkbox" id="deleteAvatar" name="delete_avatar" value="false" class="d-none" hidden>
+                                                    <button type="button" class="btn btn-outline-danger" onclick="onDeleteAvatar()">{{ __('user.avatar_delete') }}</button>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-lg-auto">
@@ -78,7 +79,16 @@
                                         <script>
                                             function onAvatarChange(input)
                                             {
-                                                document.getElementById('avatarPreview').src = URL.createObjectURL(input.files[0])
+                                                if(input.files[0].type.startsWith('image/'))
+                                                    document.getElementById('avatarPreview').src = URL.createObjectURL(input.files[0])
+                                                else document.getElementById('avatar').value = ""; // clear file
+                                            }
+                                            function onDeleteAvatar()
+                                            {
+                                                let check = document.getElementById('deleteAvatar');
+                                                check.checked = true;
+                                                check.value = "true";
+                                                document.getElementById('avatarPreview').src = '/storage/avatars/default.jpg';
                                             }
                                         </script>
                                     </form>

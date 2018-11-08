@@ -63,7 +63,8 @@ class UsersController extends Controller
             'newpass' => 'nullable|string|min:6',
             'email' => 'nullable|email|unique:users,email,'. $user->id,
             'displayname' => 'nullable|string',
-            'avatar' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'avatar' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'delete_avatar' => 'sometimes'
         ]);
 
         if(!Hash::check($request->input('currentpass'), $user->password))
@@ -95,6 +96,16 @@ class UsersController extends Controller
             $user->avatar = 'avatar_'. str_random(5) .'_'. Carbon::now()->timestamp .'.'. $request->file('avatar')->getClientOriginalExtension();
             Storage::disk('public')->putFileAs('avatars', $request->file('avatar'), $user->avatar);
         }
+        else if($request->has('delete_avatar') && $request->input('delete_avatar') == "true")
+        {
+            // delete current avatar & replace with default
+            if($user->avatar != 'default.jpg')
+            {
+                Storage::disk('public')->delete('avatars/'. $user->avatar);
+                $user->avatar = 'default.jpg';
+            }
+        }
+
 
         $user->update();
 
