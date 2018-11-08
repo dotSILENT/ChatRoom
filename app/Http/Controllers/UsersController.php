@@ -93,7 +93,7 @@ class UsersController extends Controller
             }
 
             // generate a unique name for the avatar
-            $user->avatar = 'avatar_'. str_random(5) .'_'. Carbon::now()->timestamp .'.'. $request->file('avatar')->getClientOriginalExtension();
+            $user->avatar = 'avatar_'. uniqid() .'_'. Carbon::now()->timestamp .'.'. $request->file('avatar')->getClientOriginalExtension();
             Storage::disk('public')->putFileAs('avatars', $request->file('avatar'), $user->avatar);
         }
         else if($request->has('delete_avatar') && $request->input('delete_avatar') == "true")
