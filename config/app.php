@@ -93,6 +93,25 @@ return [
     */
     'supported_locales' => ['en', 'pl'],
 
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Avatar storage path
+    |--------------------------------------------------------------------------
+    |
+    | Where the user avatars will be stored (directory has to be in storage/public/)
+    |
+    */
+    'avatars_dir' => env('AVATARS_DIR', 'avatars'),
+
+    /*
+    |---------------------------------------------------------------------------
+    | Default avatar file name
+    |---------------------------------------------------------------------------
+    |
+    */
+    'default_avatar' => env('AVATARS_DEFAULT', 'default.jpg'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Fallback Locale

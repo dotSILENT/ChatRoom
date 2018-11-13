@@ -21,7 +21,7 @@
                                         @method('put')
                                         <div class="row">
                                             <div class="col text-center">
-                                                <img id="avatarPreview" src="{{ asset('storage/avatars/'. $user->avatar) }}" class="rounded-circle avatar-big">
+                                                <img id="avatarPreview" src="{{ asset('storage/'. config('app.avatars_dir') .'/'. $user->avatar) }}" class="rounded-circle avatar-big">
                                                 <div class="btn-group-vertical mt-2" role="group">
                                                     <label class="btn btn-outline-primary">
                                                         {{ __('user.avatar_change') }}

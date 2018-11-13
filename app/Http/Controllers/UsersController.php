@@ -86,23 +86,23 @@ class UsersController extends Controller
         // Handle avatar upload
         if($request->hasFile('avatar') && $request->file('avatar')->isValid())
         {
-            if($user->avatar != 'default.jpg')
+            if($user->avatar !== config('app.default_avatar'))
             {
                 // delete previous file
-                Storage::disk('public')->delete('avatars/'. $user->avatar);
+                Storage::disk('public')->delete(config('app.avatars_dir') . '/' . $user->avatar);
             }
 
             // generate a unique name for the avatar
             $user->avatar = 'avatar_'. uniqid() .'_'. Carbon::now()->timestamp .'.'. $request->file('avatar')->getClientOriginalExtension();
-            Storage::disk('public')->putFileAs('avatars', $request->file('avatar'), $user->avatar);
+            Storage::disk('public')->putFileAs(config('app.avatars_dir'), $request->file('avatar'), $user->avatar);
         }
         else if($request->has('delete_avatar') && $request->input('delete_avatar') == "true")
         {
             // delete current avatar & replace with default
-            if($user->avatar != 'default.jpg')
+            if($user->avatar != config('app.default_avatar'))
             {
-                Storage::disk('public')->delete('avatars/'. $user->avatar);
-                $user->avatar = 'default.jpg';
+                Storage::disk('public')->delete(config('app.avatars_dir') . '/' . $user->avatar);
+                $user->avatar = config('app.default_avatar');
             }
         }
 
