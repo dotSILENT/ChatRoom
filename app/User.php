@@ -36,7 +36,7 @@ class User extends Authenticatable
      */
     public function displayName()
     {
-        if(strlen($this->nickname) <= 0)
+        if(empty($this->nickname))
             return $this->username;
         return $this->nickname;
     }

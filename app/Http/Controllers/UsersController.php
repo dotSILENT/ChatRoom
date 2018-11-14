@@ -62,7 +62,7 @@ class UsersController extends Controller
             'currentpass' => 'required|string',
             'newpass' => 'nullable|string|min:6',
             'email' => 'nullable|email|unique:users,email,'. $user->id,
-            'displayname' => 'nullable|string',
+            'displayname' => 'nullable|string|min:1|max:26',
             'avatar' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
             'delete_avatar' => 'sometimes'
         ]);
