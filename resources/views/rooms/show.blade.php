@@ -2,7 +2,6 @@
 
 @section('head')
     <meta name="roomID" content="{{ $room->id }}">
-    <meta name="apiToken" content="{{ Auth::user()->api_token }}">
 @endsection
 
 @section('bottomscripts')
@@ -33,18 +32,16 @@
                         <div id="chatroom-users" class="col-2 h-100 d-none d-lg-block">
                             <ul class="list-group list-group-flush">
                                 @foreach($room->users as $user)
-                                    @if($user->id  !== Auth::user()->id)
                                     <li class="list-group-item list-group-item-action list-group-item-light p-0">
                                         <div class="row no-gutters py-2">
                                             <div class="col-2">
-                                                <div style="background: red; height: 100%; width: 100%; border-radius: 50%"></div>
+                                                <img src="{{ asset('storage/'. config('app.avatars_dir') . '/' . $user->avatar) }}" class="rounded-circle avatar-fluid">
                                             </div>
                                             <div class="col-10 pl-1" style="overflow-x: hidden; white-space: nowrap;">
                                                 <span>{{ $user->username }}</span>
                                             </div>
                                         </div>
                                     </li>
-                                    @endif
                                 @endforeach
                             </ul>
                         </div>

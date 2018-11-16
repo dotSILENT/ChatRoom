@@ -104,7 +104,7 @@ var app = {
         /**
          * Get broadcasted events like new message etc
          */
-        window.Echo.channel('room.' + app.roomID).listen('NewRoomMessage', function (msg) {
+        window.Echo.private('room.' + app.roomID).listen('NewMessage', function (msg) {
             app.messages.push(msg);
             app.messagesCount++;
             renderMessages();
@@ -120,7 +120,7 @@ var $messageSubmit = $('#room-message-submit');
 /* Initialize things on document load just to do it after the page loads */
 $(document).ready(function () {
     /** initialize our app */
-    var auth = 'Bearer ' + document.head.querySelector('meta[name="apiToken"]').content;
+    var auth = 'Bearer ' + window.apiToken;
     var roomID = document.head.querySelector('meta[name="roomID"]').content;
     app.init('/api', auth, roomID);
 

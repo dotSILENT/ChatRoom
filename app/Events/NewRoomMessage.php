@@ -35,7 +35,7 @@ class NewRoomMessage implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-       return new Channel('room.'. $this->msg->room->id);
+       return new PrivateChannel('room.'. $this->msg->room->id);
     }
 
     public function broadcastWith()
@@ -46,6 +46,6 @@ class NewRoomMessage implements ShouldBroadcast
 
     public function broadcastAs()
     {
-        return 'NewRoomMessage';
+        return 'NewMessage';
     }
 }

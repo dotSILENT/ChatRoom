@@ -10544,3 +10544,13 @@ body {
   height: 40px;
 }
 
+.avatar-tiny {
+  width: 30px;
+  height: 30px;
+}
+
+.avatar-fluid {
+  width: 100%;
+  height: 100%;
+}
+

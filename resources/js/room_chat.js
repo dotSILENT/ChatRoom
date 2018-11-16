@@ -27,8 +27,8 @@ var app = {
         /**
          * Get broadcasted events like new message etc
          */
-        window.Echo.channel(`room.${app.roomID}`)
-        .listen('NewRoomMessage', (msg) => {
+        window.Echo.private(`room.${app.roomID}`)
+        .listen('NewMessage', (msg) => {
             app.messages.push(msg);
             app.messagesCount++;
             renderMessages();
@@ -45,7 +45,7 @@ var $messageSubmit = $('#room-message-submit');
 $(document).ready(function()
 {
     /** initialize our app */
-    let auth = 'Bearer ' + document.head.querySelector('meta[name="apiToken"]').content;
+    let auth = 'Bearer ' + window.apiToken;
     let roomID = document.head.querySelector('meta[name="roomID"]').content;
     app.init('/api', auth, roomID);
 

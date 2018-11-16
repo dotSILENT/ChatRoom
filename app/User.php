@@ -56,4 +56,12 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Room::class, 'room_users'); // many-to-many
     }
+
+    /**
+     * Check if user is in a specified room id
+     */
+    public function isInRoom($roomid)
+    {
+        return !is_null($this->rooms()->where('id', $roomid)->first());
+    }
 }
