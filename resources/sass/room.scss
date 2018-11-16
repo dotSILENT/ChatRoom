@@ -1,7 +1,19 @@
+#room-messages-box
+{
+    overflow-y: scroll;
+    max-height: 600px; /* max height gets determined by jQuery to fill whole page */
+}
+
 /* List of users on the room */
-#chatroom-users
+#room-users
 {
     overflow-y: auto;
+}
+
+.room-users-username
+{
+    overflow-x: hidden;
+    white-space: nowrap;
 }
 
 .room-message:hover

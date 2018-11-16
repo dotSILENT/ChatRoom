@@ -47,7 +47,7 @@ class MessagesController extends Controller
         }
 
         $messages = $messages->orderBy('id', 'desc')
-            ->limit('30')
+            ->limit('50')
             ->with('user')
             ->get();
 

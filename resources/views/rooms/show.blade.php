@@ -19,7 +19,7 @@
                 <div class="card-body pt-0 pr-0">
                     <div class="row no-gutters">
                         <div class="col col-lg-10">
-                            <div id="room-messages-box" class="container-fluid" style="overflow-y: auto; max-height: 600px;">
+                            <div id="room-messages-box" class="container-fluid">
                                 <div id="room-messages-top" class="d-none"></div>
                             </div>
                             <div class="input-group">
@@ -29,7 +29,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="chatroom-users" class="col-2 h-100 d-none d-lg-block">
+                        <div id="room-users" class="col-2 h-100 d-none d-lg-block">
                             <ul class="list-group list-group-flush">
                                 @foreach($room->users as $user)
                                     <li class="list-group-item list-group-item-action list-group-item-light p-0">
@@ -37,7 +37,7 @@
                                             <div class="col-2">
                                                 <img src="{{ asset('storage/'. config('app.avatars_dir') . '/' . $user->avatar) }}" class="rounded-circle avatar-fluid">
                                             </div>
-                                            <div class="col-10 pl-1" style="overflow-x: hidden; white-space: nowrap;">
+                                            <div class="col-10 pl-1 room-users-username">
                                                 <span>{{ $user->username }}</span>
                                             </div>
                                         </div>
