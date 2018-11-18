@@ -63,7 +63,7 @@ class RoomsController extends Controller
     /**
      * Display the specified chat room.
      *
-     * @param  int  $id
+     * @param  int  $id Room ID
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -90,7 +90,7 @@ class RoomsController extends Controller
     /**
      * Show the form for editing the specified chat room.
      *
-     * @param  int  $id
+     * @param  int  $id Room ID
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -102,7 +102,7 @@ class RoomsController extends Controller
      * Update the specified chat room in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  int  $id Room ID
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -113,7 +113,7 @@ class RoomsController extends Controller
     /**
      * Remove the specified chat room from storage.
      *
-     * @param  int  $id
+     * @param  int  $id Room ID
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

@@ -1,11 +1,29 @@
+#room-messages-box
+{
+    overflow-y: scroll;
+    max-height: 600px; /* max height gets determined by jQuery to fill whole page */
+}
+
 /* List of users on the room */
-#chatroom-users
+#room-users
 {
     overflow-y: auto;
+}
+
+.room-users-username
+{
+    overflow-x: hidden;
+    white-space: nowrap;
 }
 
 .room-message:hover
 {
     background-color: rgba(0,0,0,0.05);
+    border-radius: 5px;
+}
+
+.room-new-message
+{
+    background-color: rgba(255, 8, 0, 0.05);
     border-radius: 5px;
 }

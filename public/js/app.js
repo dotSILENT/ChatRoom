@@ -17266,9 +17266,9 @@ window.Popper = __webpack_require__(12).default;
  */
 
 try {
-  window.$ = window.jQuery = __webpack_require__(13);
+    window.$ = window.jQuery = __webpack_require__(13);
 
-  __webpack_require__(36);
+    __webpack_require__(36);
 } catch (e) {}
 
 /**
@@ -17290,10 +17290,17 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 var token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
-  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 } else {
-  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
+
+/**
+ * Get the client API token
+ */
+
+var apiToken = document.head.querySelector('meta[name="apiToken"]');
+if (apiToken) window.apiToken = apiToken.content;
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
@@ -17305,9 +17312,14 @@ if (token) {
 window.io = __webpack_require__(57);
 
 window.Echo = new __WEBPACK_IMPORTED_MODULE_0_laravel_echo___default.a({
-  namespace: false,
-  broadcaster: 'socket.io',
-  host: window.location.hostname + ':6001'
+    namespace: false,
+    broadcaster: 'socket.io',
+    host: window.location.hostname + ':6001',
+    auth: {
+        headers: {
+            Authorization: 'Bearer ' + window.apiToken
+        }
+    }
 });
 
 /***/ }),

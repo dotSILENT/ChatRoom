@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'username', 'email', 'password'
+        'username', 'nickname', 'email', 'password'
     ];
 
     /**
@@ -28,6 +28,18 @@ class User extends Authenticatable
     protected $hidden = [
         'api_token', 'password', 'remember_token', 'email', 'email_verified_at'
     ];
+
+    /**
+     * Return the display name (username or nickname if set)
+     *
+     * @return string
+     */
+    public function displayName()
+    {
+        if(empty($this->nickname))
+            return $this->username;
+        return $this->nickname;
+    }
 
     /**
      * Get chat rooms created by this user
@@ -43,5 +55,13 @@ class User extends Authenticatable
     public function rooms()
     {
         return $this->belongsToMany(Room::class, 'room_users'); // many-to-many
+    }
+
+    /**
+     * Check if user is in a specified room id
+     */
+    public function isInRoom($roomid)
+    {
+        return !is_null($this->rooms()->where('id', $roomid)->first());
     }
 }

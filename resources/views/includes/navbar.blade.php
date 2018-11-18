@@ -10,6 +10,8 @@
                         {{ Auth::user()->username }}
                     </a>
                     <div  class="dropdown-menu dropdown-menu-right" aria-labelledby="user-dropdown">
+                        <a class="dropdown-item" href="{{ route('users.show', '@me') }}">{{ __('user.showprofile') }}</a>
+                        <a class="dropdown-item" href="{{ route('users.edit', '@me') }}">{{ __('user.editprofile') }}</a>
                         <a class="dropdown-item" href="{{ route('logout') }}">{{ __('auth.logout') }}</a>
                     </div>
                 </li>

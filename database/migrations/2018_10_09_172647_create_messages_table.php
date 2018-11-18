@@ -17,7 +17,7 @@ class CreateMessagesTable extends Migration
             $table->increments('id');
             $table->integer('room_id')->foreign()->references('id')->on('rooms');
             $table->integer('user_id')->foreign()->references('id')->on('users');
-            $table->string('content', 200);
+            $table->text('content');
             $table->string('type', 10); // message, image, file etc
             $table->timestamps();
         });
