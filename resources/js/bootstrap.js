@@ -39,6 +39,14 @@ if (token) {
 }
 
 /**
+ * Get the client API token
+ */
+
+let apiToken = document.head.querySelector('meta[name="apiToken"]');
+if(apiToken)
+    window.apiToken = apiToken.content;
+
+/**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
  * allows your team to easily build robust real-time web applications.
@@ -50,5 +58,12 @@ if (token) {
  window.Echo = new Echo({
     namespace: false,
     broadcaster: 'socket.io',
-    host: window.location.hostname + ':6001'
+    host: window.location.hostname + ':6001',
+    auth:
+    {
+        headers:
+        {
+            Authorization: 'Bearer ' + window.apiToken
+        }
+    }
 });

@@ -9,5 +9,6 @@
         <div class="container pt-2" id="bodyContainer">
             @yield('content')
         </div>
+        @yield('bottomscripts')
     </body>
 </html>
