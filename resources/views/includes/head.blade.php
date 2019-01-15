@@ -4,7 +4,9 @@
 
 <!-- CSRF Token -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
+@if(Auth::check())
 <meta name="apiToken" content="{{ Auth::user()->api_token }}">
+@endif
 
 <title>{{ config('app.name', 'ChatRoom') }}</title>
 
