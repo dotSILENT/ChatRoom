@@ -85,4 +85,32 @@ class MessagesController extends Controller
         event(new NewRoomMessage($msg));
         return response()->json(['status' => 'success'], 200);
     }
+
+    /**
+     * Delete user's own message
+     * TODO: Add permissions to delete messages of other users
+     * 
+     * @param integer $room Room ID
+     * @param integer $message Message ID
+     * @return response
+     * 
+     */
+    public function destroy($room, $message)
+    {
+        $room = Room::findOrFail($room);
+
+        $message = $room->messages()->where('id', $message)->first();
+
+        if($message->user->id !== Auth::guard('api')->id())
+        {
+            return response()->json(['status' => 'fail'], 403);
+        }
+        else
+        {
+            $message->delete();
+        }
+
+        // TODO Add event
+        return response()->json(['status' => 'success'], 200);
+    }
 }

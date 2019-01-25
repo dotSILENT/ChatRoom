@@ -19,3 +19,4 @@ use Illuminate\Http\Request;
 
 Route::get('/room/{room}/messages', 'MessagesController@index');
 Route::post('/room/{room}/messages', 'MessagesController@store');
+Route::delete('/room/{room}/messages/{message}', 'MessagesController@destroy');
