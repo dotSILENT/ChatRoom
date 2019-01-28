@@ -41,10 +41,6 @@ class MessagesController extends Controller
         {
             $messages = $messages->where('id', '<', $request->before);
         }
-        else
-        {
-            $messages = $room->messages();
-        }
 
         $messages = $messages->orderBy('id', 'desc')
             ->limit('50')
