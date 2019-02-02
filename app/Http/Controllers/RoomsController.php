@@ -78,7 +78,7 @@ class RoomsController extends Controller
                 // holla holla m8 this is a private one, you can only get added through an invite
                 return redirect()->route('home')->setStatusCode(401);
             }
-            else
+            else // public room or it's the owner of the private room
             {
                 // Add him to the room
                 $room->users()->attach(Auth::user()->id);
@@ -118,6 +118,15 @@ class RoomsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $room = Room::findOrFail($id);
+
+        if(Auth::user()->id !== $room->owner->id)
+        {
+            return redirect()->route('home')->setStatusCode(403); // forbidden
+        }
+
+        $room->delete();
+
+        return redirect()->route('home')->setStatusCode(200);
     }
 }

@@ -6,9 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Room extends Model
 {
-    //
     protected $fillable = ['name', 'private', 'user_id' ];
     protected $hidden = ['id'];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        // Cleanup on delete event
+        static::deleting(function($room)
+        {
+             $room->messages()->delete();
+             $room->users()->detach();
+        });
+    }
 
     /**
      * Get filtered rooms for guest/user
